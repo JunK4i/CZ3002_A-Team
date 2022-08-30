@@ -6,23 +6,23 @@ var bodyParser = require('body-parser');
 var mysql = require('mysql');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-    extended: true
+  extended: true
 }));
 
 // connection configurations
 var con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "password"
+  host: "localhost",
+  user: "root",
+  password: "password",
+  database: 'ASE_DB'
 });
 
 con.connect(function (err) {
-    if (err) throw err;
-    console.log("Connected!");
+  if (err) throw err;
+  console.log("Connected!");
 });
 
 // set port
 app.listen(3000, function () {
-    console.log('Node app is running on port 3000');
+  console.log('Node app is running on port 3000');
 });
-module.exports = app;
