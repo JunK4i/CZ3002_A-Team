@@ -1,13 +1,13 @@
-import logo from "./logo.svg";
 import "./App.css";
-import Layout from "./components/layouts/layout";
-import Login from "./components/Login/Login";
+import Login from "./routes/login-page";
+import { Link } from "react-router-dom";
+import { Container } from "react-bootstrap";
 
 function App() {
   return (
-    <Layout>
-      <Login />
-    </Layout>
+    <Container>
+      <Link to="/login">Login</Link>
+    </Container>
   );
 }
 
