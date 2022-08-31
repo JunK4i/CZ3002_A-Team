@@ -12,6 +12,7 @@ The frontend stack is built primarily in React and uses the following libaries:
 4. [React Router](https://reactrouter.com/en/main) to set up routes for the different pages in the application
 5. [React Bootstrap Icons](https://icons.getbootstrap.com/#usage) for app icons
 6. [Firebase](https://firebase.google.com/docs?authuser=0) for app authentication.
+7. [Framer Motion](https://www.framer.com/motion/) for animations
 
 ## Available Scripts
 
