@@ -2,8 +2,14 @@
 
 var express = require('express');
 var app = express();
+const dotenv = require('dotenv');
+dotenv.config();
 var bodyParser = require('body-parser');
 var mysql = require('mysql');
+//use router.js
+const route = require('./router.js');
+app.use('', route);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
@@ -11,10 +17,10 @@ app.use(bodyParser.urlencoded({
 
 // connection configurations
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "password",
-  database: 'ASE_DB'
+  host: process.env.HOST,
+  user: process.env.USER,
+  password: process.env.PASSWORD,
+  database: process.env.DB
 });
 
 con.connect(function (err) {
@@ -23,6 +29,6 @@ con.connect(function (err) {
 });
 
 // set port
-app.listen(3000, function () {
-  console.log('Node app is running on port 3000');
+app.listen(process.env.PORT, function () {
+  console.log(`Node app is running on ${process.env.PORT}`);
 });
