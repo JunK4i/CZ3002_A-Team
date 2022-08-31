@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 import { auth } from "../FirebaseConfig";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 const schema = Yup.object().shape({
   name: Yup.string()
@@ -51,100 +52,110 @@ const SignUp = (props) => {
   };
 
   return (
-    <>
-      <Button variant="btn btn-link" onClick={props.onClickHandler}>
-        Back to Log In
-      </Button>
-      <Formik
-        validationSchema={schema}
-        validateOnChange={false}
-        initialValues={{
-          name: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-        }}
-        onSubmit={submitHandler}
+    <AnimatePresence>
+      <motion.div
+        key="signup"
+        initial={{ x: -100, opacity: 1 }}
+        animate={{ x: 0, opacity: 1 }}
+        // exit={{ x: -100, opacity: 0 }}
       >
-        {({ handleChange, values, isSubmitting, errors, handleSubmit }) => (
-          <Form noValidate onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="signupName">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="Enter Name"
-                name="name"
-                value={values.name}
-                onChange={handleChange}
-                isInvalid={!!errors.name}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.name}
-              </Form.Control.Feedback>
-            </Form.Group>
+        <Formik
+          validationSchema={schema}
+          validateOnChange={false}
+          initialValues={{
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+          }}
+          onSubmit={submitHandler}
+        >
+          {({ handleChange, values, isSubmitting, errors, handleSubmit }) => (
+            <Form noValidate onSubmit={handleSubmit}>
+              <Form.Group className="mb-3" controlId="signupName">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="Enter Name"
+                  name="name"
+                  value={values.name}
+                  onChange={handleChange}
+                  isInvalid={!!errors.name}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.name}
+                </Form.Control.Feedback>
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="signupEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                required
-                type="email"
-                placeholder="Enter Email"
-                name="email"
-                value={values.email}
-                onChange={handleChange}
-                isInvalid={!!errors.email}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.email}
-              </Form.Control.Feedback>
-            </Form.Group>
+              <Form.Group className="mb-3" controlId="signupEmail">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  required
+                  type="email"
+                  placeholder="Enter Email"
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  isInvalid={!!errors.email}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.email}
+                </Form.Control.Feedback>
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="signupPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                required
-                type="password"
-                placeholder="Enter Password"
-                name="password"
-                value={values.password}
-                onChange={handleChange}
-                isInvalid={!!errors.password}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.password}
-              </Form.Control.Feedback>
-            </Form.Group>
+              <Form.Group className="mb-3" controlId="signupPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  required
+                  type="password"
+                  placeholder="Enter Password"
+                  name="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  isInvalid={!!errors.password}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.password}
+                </Form.Control.Feedback>
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="signupConfirmPassword">
-              <Form.Label>Confirm Password</Form.Label>
-              <Form.Control
-                required
-                type="password"
-                placeholder="Re-enter Password"
-                name="confirmPassword"
-                value={values.confirmPassword}
-                onChange={handleChange}
-                isInvalid={!!errors.confirmPassword}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.confirmPassword}
-              </Form.Control.Feedback>
-            </Form.Group>
+              <Form.Group className="mb-3" controlId="signupConfirmPassword">
+                <Form.Label>Confirm Password</Form.Label>
+                <Form.Control
+                  required
+                  type="password"
+                  placeholder="Re-enter Password"
+                  name="confirmPassword"
+                  value={values.confirmPassword}
+                  onChange={handleChange}
+                  isInvalid={!!errors.confirmPassword}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.confirmPassword}
+                </Form.Control.Feedback>
+              </Form.Group>
 
-            <div className="d-grid gap-2">
-              <Button
-                variant="primary btn-block"
-                type="submit"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? <Spinner animation="border" /> : "Sign Up"}
-              </Button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </>
+              <div className="d-grid gap-2 mt-4">
+                <Button
+                  variant="primary btn-block p-3"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? <Spinner animation="border" /> : "Sign Up"}
+                </Button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+        <Button
+          variant="btn btn-link text-decoration-none p-0 mt-1"
+          onClick={props.onClickHandler}
+        >
+          Sign in instead
+        </Button>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

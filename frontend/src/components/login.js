@@ -5,6 +5,7 @@ import { Formik } from "formik";
 import { auth } from "../FirebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -47,75 +48,85 @@ const Login = (props) => {
       });
   };
   return (
-    <>
-      <Formik
-        validationSchema={schema}
-        validateOnChange={false}
-        initialValues={{
-          name: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-        }}
-        onSubmit={submitHandler}
+    <AnimatePresence exitBeforeEnter>
+      <motion.div
+        key="login"
+        initial={{ x: -100, opacity: 1 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: -100, opacity: 0 }}
       >
-        {({
-          handleChange,
-          values,
-          touched,
-          isSubmitting,
-          errors,
-          handleSubmit,
-        }) => (
-          <Form noValidate onSubmit={handleSubmit}>
-            <Form.Group className="mb-3" controlId="loginEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                required
-                type="email"
-                placeholder="Enter Email"
-                name="email"
-                value={values.email}
-                onChange={handleChange}
-                isInvalid={!!errors.email}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.email}
-              </Form.Control.Feedback>
-            </Form.Group>
+        <Formik
+          validationSchema={schema}
+          validateOnChange={false}
+          initialValues={{
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+          }}
+          onSubmit={submitHandler}
+        >
+          {({
+            handleChange,
+            values,
+            touched,
+            isSubmitting,
+            errors,
+            handleSubmit,
+          }) => (
+            <Form noValidate onSubmit={handleSubmit}>
+              <Form.Group className="mb-3" controlId="loginEmail">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  required
+                  type="email"
+                  placeholder="Enter Email"
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  isInvalid={!!errors.email}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.email}
+                </Form.Control.Feedback>
+              </Form.Group>
 
-            <Form.Group className="mb-3" controlId="loginPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                required
-                type="password"
-                placeholder="Enter Password"
-                name="password"
-                value={values.password}
-                onChange={handleChange}
-                isInvalid={!!errors.password}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.password}
-              </Form.Control.Feedback>
-            </Form.Group>
+              <Form.Group className="mb-3" controlId="loginPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  required
+                  type="password"
+                  placeholder="Enter Password"
+                  name="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  isInvalid={!!errors.password}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.password}
+                </Form.Control.Feedback>
+              </Form.Group>
 
-            <div className="d-grid gap-2">
-              <Button
-                variant="primary btn-block"
-                type="submit"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? <Spinner animation="border" /> : "Log In"}
-              </Button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-      <Button variant="btn btn-link" onClick={props.onClickHandler}>
-        Don't have an account? Sign up here!
-      </Button>
-    </>
+              <div className="d-grid gap-2 mt-4">
+                <Button
+                  variant="primary btn-block"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? <Spinner animation="border" /> : "Log In"}
+                </Button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+        <Button
+          variant="btn btn-link text-decoration-none p-0 mt-1"
+          onClick={props.onClickHandler}
+        >
+          Create an account
+        </Button>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
