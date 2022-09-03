@@ -19,10 +19,10 @@ app.use(express.text());
 app.use("", route);
 var con = require("./utility/dbconfig");
 
-con.connect(function (err) {
-  if (err) throw err;
-  console.log("Connected!");
-});
+// con.connect(function (err) {
+//   if (err) throw err;
+//   console.log("Connected!");
+// });
 
 // set port
 app.listen(process.env.PORT, function () {
