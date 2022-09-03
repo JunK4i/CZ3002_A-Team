@@ -1,6 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
+const recipe = require('./controllers/recipeController')
+const ingredient = require('./controllers/ingredientController')
+const user = require('./controllers/userController');
+const { default: axios } = require('axios');
+const { response } = require('express');
+
+
 // home route
 router.get('/', function (req, res) {
     return res.send({ error: true, message: 'hello' })
@@ -17,82 +24,49 @@ router.get('/', function (req, res) {
 //     addUserIngredient(req.userid, req.ingredientid)
 //     res.send("success")
 // })
-// router.delete('/ingredient', (req, res) => {
-//     deleteUserIngredient(req.userid, req.ingredientid)
-//     res.send("success")
-// })
+router.delete('/ingredient', (req, res) => {
+    ingredient.deleteUserIngredient(req.headers.userid, req.headers.ingredientid)
+    res.send("success")
+})
 
-// router.get('/allrecipe', getAllReciepe)
+router.get('/searchRecipe', (req, res) => {
+    console.log(`searching for recipes with param: ${req.headers.query} with offset:${req.headers.offset}`)
+    let params = {
+        params: {
+            query: req.headers.query,
+            offset: 0,
+            apiKey: process.env.API_KEY
+        }
+    }
+    if (typeof req.headers.offset !== "undefined") {
+        params.params.offset = req.headers.offset
+    }
+    url = "https://api.spoonacular.com/recipes/complexSearch"
+    axios.get(url, params).then((response) => {
+        res.send(response.data)
+    }).catch((err) => {
+        res.send(err)
+    })
+})
 
-// router.get('/userrecipe', (req, res) => {
-//     res.send(getUserRecipe(req.userid))
-// })
+router.get('/userrecipe', (req, res) => {
+    res.send(recipe.getUserRecipe(req.headers.userid))
+})
 
-// router.get('/recipe', (req, res) => {
-//     res.send(getRecipe(req.recipeId))
-// })
 
-// // Retrieve all users 
-// app.get('/users', function (req, res) {
-//     con.query('SELECT * FROM users', function (error, results, fields) {
-//                     if (error) throw error;
-//                         return res.send({ error: false, data: results, message: 'users list.' });
-//     });
-// });
+router.get('/recipe', (req, res) => {
+    console.log(`retrieving recipe with id: ${req.headers.recipeid}`)
+    url = `https://api.spoonacular.com/recipes/${req.headers.recipeid}/information`
+    axios.get(url, {
+        params: {
+            apiKey: process.env.API_KEY
+        }
+    }).then((response) => {
+        res.send(response.data)
+    }).catch((err) => {
+        res.send(err)
+    })
+})
 
-// // Retrieve user with id 
-// app.get('/user/:id', function (req, res) {
-//     let user_id = req.params.id;
-//     if (!user_id) {
-//     return res.status(400).send({ error: true, message: 'Please provide user_id' });
-//     }
-//     con.query('SELECT * FROM users where id=?', user_id, function (error, results, fields) {
-//     if (error) throw error;
-//     return res.send({ error: false, data: results[0], message: 'users list.' });
-//     });
-//     });
-
-// // Add a new user  
-// app.post('/add', function (req, res) {
-//     let name = req.body.name;
-//     let email=req.body.email;
-//     if (!name) {
-//     return res.status(400).send({ error:true, message: 'Please provide name' });
-//     }
-//     con.query("INSERT INTO users SET name=?, email=?", [name,email] , function (error, results, fields) {
-//     if (error) throw error;
-//     return res.send({ error: false, data: results, message: 'New user has been created successfully.' });
-//     });
-//     });
-
-// //  Update user with id
-// app.put('/user', function (req, res) {
-// let user_id = req.body.user_id;
-// let name = req.body.name;
-// if (!user_id || !name) {
-// return res.status(400).send({ error: user, message: 'Please provide user and user_id' });
-// }
-// con.query("UPDATE users SET name = ? WHERE id = ?", [name, user_id], function (error, results, fields) {
-// if (error) throw error;
-// return res.send({ error: false, data: results, message: 'user has been updated successfully.' });
-// });
-// });
-
-// //  Delete user
-// app.delete('/user', function (req, res) {
-// let user_id = req.body.user_id;
-// if (!user_id) {
-// return res.status(400).send({ error: true, message: 'Please provide user_id' });
-// }
-// con.query('DELETE FROM users WHERE id = ?', [user_id], function (error, results, fields) {
-// if (error) throw error;
-// return res.send({ error: false, data: results, message: 'User has been updated successfully.' });
-// });
-// }); 
-
-// // set port
-// app.listen(3306, function () {
-// console.log('Node app is running on port 3306');
-// });
 
 module.exports = router;
