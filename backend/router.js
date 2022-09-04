@@ -4,15 +4,6 @@ const router = express.Router();
 const userController = require("./controllers/userController");
 const ingredientController = require("./controllers/ingredientController");
 const recipeController = require("./controllers/recipeController");
-// const { default: axios } = require('axios');
-// const { response } = require('express');
-
-const recipe = require('./controllers/recipeController')
-const ingredient = require('./controllers/ingredientController')
-const user = require('./controllers/userController');
-const { default: axios } = require('axios');
-const { response } = require('express');
-
 
 // home route
 router.get("/", function (req, res) {
@@ -38,9 +29,7 @@ router.delete('/ingredient', ingredientController.deleteUserIngredient)
 router.get('/searchRecipe', recipeController.searchRecipe)
 
 // retrive recipe that the user is able to make
-router.get('/userrecipe', (req, res) => {
-    res.send(recipe.getUserRecipe(req.headers.userid))
-})
+router.get('/userrecipe', recipeController.getUserRecipe)
 
 // Get information about a recipe
 router.get('/recipe', recipeController.getRecipe)
