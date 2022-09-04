@@ -1,22 +1,28 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
+//Controllers
+const userController = require("./controllers/userController");
+const ingredientController = require("./controllers/ingredientController");
+const recipeController = require("./controllers/recipeController");
+
 // home route
-router.get('/', function (req, res) {
-    return res.send({ error: true, message: 'hello' })
+router.get("/", function (req, res) {
+  return res.send("hi welcome!");
 });
 
-// router.post('/newuser', createNewUser())
+// add new user
+router.post("/newuser", userController.createNewUser);
 
-// router.get('/allingredient', getIngredient())
-// router.get('/ingredient', (req, res) => {
-//     getUserIngredients(res.userid)
-//     res.send("temp")
-// })
-// router.post('/ingredient', (req, res) => {
-//     addUserIngredient(req.userid, req.ingredientid)
-//     res.send("success")
-// })
+// get list of ingredients
+router.get("/allingredient", ingredientController.getIngredient);
+
+// get user's ingredients
+router.get("/ingredient", ingredientController.getUserIngredients);
+
+// set new ingredient based on userid
+router.post("/ingredient", ingredientController.addUserIngredient);
+
 // router.delete('/ingredient', (req, res) => {
 //     deleteUserIngredient(req.userid, req.ingredientid)
 //     res.send("success")
@@ -32,7 +38,7 @@ router.get('/', function (req, res) {
 //     res.send(getRecipe(req.recipeId))
 // })
 
-// // Retrieve all users 
+// // Retrieve all users
 // app.get('/users', function (req, res) {
 //     con.query('SELECT * FROM users', function (error, results, fields) {
 //                     if (error) throw error;
@@ -40,7 +46,7 @@ router.get('/', function (req, res) {
 //     });
 // });
 
-// // Retrieve user with id 
+// // Retrieve user with id
 // app.get('/user/:id', function (req, res) {
 //     let user_id = req.params.id;
 //     if (!user_id) {
@@ -52,7 +58,7 @@ router.get('/', function (req, res) {
 //     });
 //     });
 
-// // Add a new user  
+// // Add a new user
 // app.post('/add', function (req, res) {
 //     let name = req.body.name;
 //     let email=req.body.email;
@@ -88,7 +94,7 @@ router.get('/', function (req, res) {
 // if (error) throw error;
 // return res.send({ error: false, data: results, message: 'User has been updated successfully.' });
 // });
-// }); 
+// });
 
 // // set port
 // app.listen(3306, function () {
