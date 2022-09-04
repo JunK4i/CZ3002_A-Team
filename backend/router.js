@@ -7,6 +7,13 @@ const recipeController = require("./controllers/recipeController");
 // const { default: axios } = require('axios');
 // const { response } = require('express');
 
+const recipe = require('./controllers/recipeController')
+const ingredient = require('./controllers/ingredientController')
+const user = require('./controllers/userController');
+const { default: axios } = require('axios');
+const { response } = require('express');
+
+
 // home route
 router.get("/", function (req, res) {
     return res.send("hi welcome!");
