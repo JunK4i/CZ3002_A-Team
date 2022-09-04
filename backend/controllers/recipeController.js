@@ -58,9 +58,11 @@ const getUserRecipe = (req, res) => {
                     ingredients: ingredientString,
                     apiKey: process.env.API_KEY
                 }
+            }).then((response) => {
+                return res.send(response)
+            }).catch((err) => {
+                return res.send(err)
             })
-
-            return res.send(results);
         }
     );
 
