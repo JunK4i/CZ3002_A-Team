@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+
 //Controllers
 const userController = require("./controllers/userController");
 const ingredientController = require("./controllers/ingredientController");
@@ -7,7 +8,7 @@ const recipeController = require("./controllers/recipeController");
 
 // home route
 router.get("/", function (req, res) {
-    return res.send("hi welcome!");
+  return res.send("hi welcome!");
 });
 
 // add new user
@@ -23,15 +24,15 @@ router.get("/ingredient", ingredientController.getUserIngredients);
 router.post("/ingredient", ingredientController.addUserIngredient);
 
 // delete a ingredient in the user's inventory
-router.delete('/ingredient', ingredientController.deleteUserIngredient)
+router.delete("/ingredient", ingredientController.deleteUserIngredient);
 
 // search for recipe with search params
-router.get('/searchRecipe', recipeController.searchRecipe)
+router.get("/searchRecipe", recipeController.searchRecipe);
 
 // retrive recipe that the user is able to make
-router.get('/userrecipe', recipeController.getUserRecipe)
+router.get("/userrecipe", recipeController.getUserRecipe);
 
 // Get information about a recipe
-router.get('/recipe', recipeController.getRecipe)
+router.get("/recipe", recipeController.getRecipe);
 
 module.exports = router;

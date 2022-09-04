@@ -7,11 +7,10 @@ const route = require("./router.js");
 var app = express();
 dotenv.config();
 
-var bodyParser = require('body-parser');
+var bodyParser = require("body-parser");
 // var mysql = require('mysql');
-//use router.js
-const route = require('./router.js');
-app.use('', route);
+
+app.use("", route);
 
 // app.use(bodyParser.json());
 // app.use(
