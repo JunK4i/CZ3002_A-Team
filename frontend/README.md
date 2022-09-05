@@ -1,6 +1,18 @@
-# Getting Started with Create React App
+# Recipely Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This document outlines the frontend side of the Recipely project.
+
+## Libraries and Frameworks
+
+The frontend stack is built primarily in React and uses the following libaries:
+
+1. [Formik](https://formik.org/) to handle form states for the log in and sign up page
+2. [Yup](https://github.com/jquense/yup) to handle form validation
+3. [React-bootstrap](https://react-bootstrap.netlify.app/): Frontend Framework to form the project's UI Foundation
+4. [React Router](https://reactrouter.com/en/main) to set up routes for the different pages in the application
+5. [React Bootstrap Icons](https://icons.getbootstrap.com/#usage) for app icons
+6. [Firebase](https://firebase.google.com/docs?authuser=0) for app authentication.
+7. [Framer Motion](https://www.framer.com/motion/) for animations
 
 ## Available Scripts
 
