@@ -4,6 +4,7 @@ import LoginImage from "../images/login.svg";
 import { useState } from "react";
 import Login from "../components/login";
 import SignUp from "../components/signup";
+
 const LoginPage = () => {
   const [signUp, setSignUp] = useState(false);
 
