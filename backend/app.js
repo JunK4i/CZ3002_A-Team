@@ -7,20 +7,13 @@ const route = require("./router.js");
 var app = express();
 dotenv.config();
 
-var bodyParser = require("body-parser");
-// var mysql = require('mysql');
+app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 
-app.use("", route);
-
-// app.use(bodyParser.json());
-// app.use(
-//   bodyParser.urlencoded({
-//     extended: true,
-//   })
-// );
-
-app.use(express.json());
-app.use(express.text());
 app.use("", route);
 var con = require("./utility/dbconfig");
 

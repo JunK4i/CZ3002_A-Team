@@ -34,7 +34,7 @@ const getUserIngredients = (req, res) => {
 const addUserIngredient = (req, res) => {
   var con = require("../utility/dbconfig");
   let userid = req.body.userid;
-  let ingredient = req.body.ingredient;
+  let ingredient = req.body.ingredientid;
   if (!userid || !ingredient) {
     return res.status(400).send({
       error: true,
@@ -75,4 +75,9 @@ const deleteUserIngredient = (req, res) => {
   );
 };
 
-module.exports = { getIngredient, getUserIngredients, addUserIngredient, deleteUserIngredient };
+module.exports = {
+  getIngredient,
+  getUserIngredients,
+  addUserIngredient,
+  deleteUserIngredient,
+};
