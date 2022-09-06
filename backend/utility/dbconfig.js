@@ -6,4 +6,9 @@ var con = mysql.createConnection({
   password: process.env.PASSWORD,
   database: process.env.DB,
 });
+
+con.connect(function (err) {
+  if (err) throw err;
+  console.log("Connected!");
+});
 module.exports = con;

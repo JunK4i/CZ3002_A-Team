@@ -17,11 +17,6 @@ app.use(
 app.use("", route);
 var con = require("./utility/dbconfig");
 
-// con.connect(function (err) {
-//   if (err) throw err;
-//   console.log("Connected!");
-// });
-
 // set port
 app.listen(process.env.PORT, function () {
   console.log(`Node app is running on ${process.env.PORT}`);

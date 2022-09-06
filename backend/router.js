@@ -15,7 +15,7 @@ router.get("/", function (req, res) {
 router.post("/newuser", userController.createNewUser);
 
 // get list of ingredients
-router.get("/allingredient", ingredientController.getIngredient);
+router.get("/searchingredient", ingredientController.getIngredient);
 
 // get user's ingredients
 router.get("/ingredient", ingredientController.getUserIngredients);
