@@ -1,5 +1,10 @@
+/* Stylesheet for common components accross the app */
+
+/* Bootstrap Icons css classes */
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css");
+
 .white-card{
     background-color: #fff;
     border-radius: 5px;
-    padding: 20px;
+    padding: 10px;
 }
