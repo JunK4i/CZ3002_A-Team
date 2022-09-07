@@ -15,7 +15,6 @@ const Ingredients = ({ children }) => {
     const [currentPage, setCurrentPage] = React.useState(1);
 
     function handlePageChange(newPage) {
-        console.log("Page changed to " + newPage);
         setCurrentPage(newPage);
     }
 
@@ -33,8 +32,8 @@ const Ingredients = ({ children }) => {
                         <i className="bi-plus-circle-fill"></i> Add Ingredient</button>
                 </Col>
             </Row>
-            <Row className="white-card gx-1" style={{ marginTop: "20px" }}>
-                <Col className="col-md-5">
+            <Row className="white-card gx-3" style={{ marginTop: "20px" }}>
+                <Col className="col-md-4">
                     <div className="white-card-header">
                         <div className="input-group">
                             <input type="text" placeholder="Search..." className="form-control" aria-label="Sizing example input"
@@ -55,12 +54,10 @@ const Ingredients = ({ children }) => {
                         </div>
                     </div>
                 </Col>
-                <Col className="col-md-2">
-
-
+                <Col className="col-md-3 align-self-center justify-content-end">
+                    <Pagination currentPage={currentPage} totalCount={700} pageSize={10} onPageChange={(handlePageChange)} />
                 </Col>
             </Row>
-            <Pagination currentPage={currentPage} totalCount={50} pageSize={10} onPageChange={handlePageChange} />
         </Container >
 
     );
