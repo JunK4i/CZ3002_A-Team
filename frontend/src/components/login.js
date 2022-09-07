@@ -25,8 +25,9 @@ const Login = (props) => {
   const submitHandler = (values, { setSubmitting, setFieldError }) => {
     signInWithEmailAndPassword(auth, values.email, values.password)
       .then((userCredential) => {
+        console.log(userCredential.user.uid);
         // Go into app
-        navigate("/");
+        navigate("/dashboard");
         setSubmitting(false);
       })
       .catch((error) => {
