@@ -19,22 +19,23 @@ const Pagination = ({ currentPage, totalCount, pageSize, onPageChange }) => {
         e.preventDefault();
         onPageChange(newPage);
     }
-
-    const leftArrow = <i className="bi bi-chevron-left" onClick={(e) => {
+    function handleClickPrev(e) {
         if (currentPage > 1) {
             e.preventDefault();
             onPageChange(currentPage - 1);
         }
-    }}></i>;
-    const rightArrow = <i className="bi bi-chevron-right" onClick={(e) => {
+    }
+    function handleClickNext(e) {
         if (currentPage < lastPage) {
             e.preventDefault();
             onPageChange(currentPage + 1);
         }
-    }}></i>;
+    }
+
+    const leftArrow = <i className="bi bi-chevron-left" onClick={e => handleClickPrev(e)}></i>;
+    const rightArrow = <i className="bi bi-chevron-right" onClick={e => handleClickNext(e)}></i>;
 
     const currNumber = <span style={{ fontWeight: "bold" }}>{currentPage}</span>;
-
 
 
     if (lastPage === 1) {
