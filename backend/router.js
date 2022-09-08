@@ -38,4 +38,7 @@ router.get("/userrecipe", recipeController.getUserRecipe);
 // Get information about a recipe
 router.get("/recipe", recipeController.getRecipe);
 
+// Make the recipe using ingredients that users have
+router.put("/useRecipe", recipeController.useRecipe);
+
 module.exports = router;
