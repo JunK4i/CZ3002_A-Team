@@ -34,7 +34,7 @@ const getIngredient = (req, res) => {
 };
 
 // need to calculate numbers of days to expiry and return
-const getUserIngredients = (req, res) => {
+const getUserIngredient = (req, res) => {
   var con = require("../utility/dbconfig");
   let userid = req.headers.userid;
   if (!userid) {
@@ -47,9 +47,24 @@ const getUserIngredients = (req, res) => {
     [userid],
     function (error, results, fields) {
       if (error) throw error;
-      return res.send({
-        message: "success",
-      });
+      try {
+        if (results[0].userid != null) {
+          var length = results.length;
+          for (var i = 0; i < length; i++) {
+            let expiry = results[i].expiry;
+            var javaDate = new Date(expiry);
+            var today = new Date();
+            var difference_in_Time = javaDate.getTime() - today.getTime();
+            var difference_in_days = Math.ceil(
+              difference_in_Time / (1000 * 3600 * 24)
+            );
+            results[i].days_to_expiry = difference_in_days;
+          }
+          return res.send(results);
+        }
+      } catch (err) {
+        return res.send("hi");
+      }
     }
   );
 };
@@ -97,6 +112,51 @@ const addUserIngredient = (req, res) => {
   );
 };
 
+const updateUserIngredient = (req, res) => {
+  var con = require("../utility/dbconfig");
+  let userid = req.body.userid;
+  let ingredientid = req.body.ingredientid;
+  let quantity = req.body.quantity;
+  let expiry = req.body.expiry;
+  let name = req.body.name;
+  let category = req.body.category;
+  if (!userid || !ingredientid || !quantity || !expiry || !name || !category) {
+    return res.status(400).send({
+      error: true,
+      message: "Please provide the required parameters. ",
+    });
+  }
+  con.query(
+    "SELECT id FROM inventory WHERE userid=? and ingredientid=? and expiry=?; ",
+    [userid, ingredientid, expiry],
+    function (error, results, fields) {
+      if (error) throw error;
+      try {
+        if (results[0].id != null) {
+          con.query(
+            "UPDATE inventory SET userid=?, ingredientid=?, quantity=?, expiry=?, name=?, category=?  WHERE id = ?  ",
+            [
+              userid,
+              ingredientid,
+              quantity,
+              expiry,
+              name,
+              category,
+              results[0].id,
+            ]
+          );
+          return res.send({
+            message: "success",
+          });
+        }
+      } catch (err) {
+        return res.send({
+          message: "failed",
+        });
+      }
+    }
+  );
+};
 const deleteUserIngredient = (req, res) => {
   var con = require("../utility/dbconfig");
   let userid = req.body.userid;
@@ -121,7 +181,8 @@ const deleteUserIngredient = (req, res) => {
 
 module.exports = {
   getIngredient,
-  getUserIngredients,
+  getUserIngredient,
   addUserIngredient,
+  updateUserIngredient,
   deleteUserIngredient,
 };

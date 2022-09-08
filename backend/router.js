@@ -18,7 +18,10 @@ router.post("/newuser", userController.createNewUser);
 router.get("/searchingredient", ingredientController.getIngredient);
 
 // get user's ingredients
-router.get("/ingredient", ingredientController.getUserIngredients);
+router.get("/ingredient", ingredientController.getUserIngredient);
+
+// update user's ingredients
+router.put("/ingredient", ingredientController.updateUserIngredient);
 
 // set new ingredient based on userid
 router.post("/ingredient", ingredientController.addUserIngredient);
