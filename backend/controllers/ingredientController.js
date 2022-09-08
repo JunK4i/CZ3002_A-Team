@@ -23,14 +23,6 @@ const getIngredient = (req, res) => {
     .catch((err) => {
       res.send(err);
     });
-  // var con = require("../utility/dbconfig");
-  // let query = req.headers.ingredient;
-  // axios
-  //   .get(
-  //     `https://api.spoonacular.com/food/ingredients/search?apiKey=${process.env.API_KEY}&query=${ingredient}`
-  //   )
-  //   .then((data) => res.json(data))
-  //   .catch((err) => next(err));
 };
 
 // need to calculate numbers of days to expiry and return

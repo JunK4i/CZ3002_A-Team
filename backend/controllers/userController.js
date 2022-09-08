@@ -8,7 +8,7 @@ const createNewUser = (req, res) => {
       .send({ error: true, message: "Please provide userid and name of user" });
   }
   con.query(
-    "INSERT INTO user SET userid=?, name=? ",
+    "INSERT IGNORE INTO user SET userid=?, name=? ",
     [userid, name],
     function (error, results, fields) {
       if (error) throw error;
