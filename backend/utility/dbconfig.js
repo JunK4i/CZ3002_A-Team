@@ -1,5 +1,5 @@
 //db configuration
-var mysql = require("mysql");
+var mysql = require("mysql2");
 var con = mysql.createConnection({
   host: process.env.HOST,
   user: process.env.USER,
