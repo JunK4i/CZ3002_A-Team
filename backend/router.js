@@ -106,19 +106,28 @@ router.delete("/ingredient", (req, res) => {
 });
 
 // discard ingredient => delete the ingredient, then record the deletion
-router.delete('/discardIngredient', (req, res) => {
-  const result = ingredientController.getUserIngredients(req.body, userid, req.body.id)
-  if (typeof result !== "undefined") {
-    ingredientController.deleteUserIngredient(req.body.userid)
-    wasteController.recordWaste(result)
-    return res.send("success")
+router.delete('/discardIngredient', async (req, res) => {
+  try {
+    const result = await ingredientController.getIngredientByUseridAndId(req.body.userid, req.body.id)
+    if (result.length === 1) {
+      await ingredientController.deleteUserIngredient(req.body.userid, req.body.id)
+      res.send("success")
+    }
+  } catch (err) {
+    res.send("error has occured,unable to delete")
   }
-  return res.send("unable to discard ingredient")
+
 })
 
 // search for recipe with search params
 router.get("/searchRecipe", (req, res) => {
-  res.send(recipeController.getRecipe(req.headers.query))
+  console.log(`searching for recipes with param: ${req.headers.query}`)
+  recipeController.searchRecipe(req.headers.query, req.headers.offset)
+    .then((result) => {
+      res.send(result)
+    }).catch((err) => {
+      res.send(err)
+    })
 });
 
 // retrive recipe that the user is able to make

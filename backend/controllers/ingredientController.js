@@ -130,25 +130,36 @@ const deleteUserIngredient = (userid, id) => {
 
 };
 
-const checkUserExistingIngredient = (record) => {
+const getIngredientsByUserIdAndIngredientIdAndExpiry = (userid, ingredientid, expiry) => {
   return new Promise((resolve, reject) => {
-    console.log(record)
-    if (!record.userid || !record.ingredientid || !record.quantity || !record.expiry || !record.name || !record.category) {
+    if (!userid || !ingredientid || !expiry) {
       reject({ error: true, message: "please provide the required parameters" })
     }
-    console.log("here")
     con.query(
-      "SELECT * FROM inventory where userid=?, ingredientid=?, expiry=?",
-      [record.userid, record.ingreidientid, record.expiry],
+      "SELECT * FROM inventory where userid=? AND ingredientid=? AND expiry=?",
+      [userid, ingredientid, expiry],
       function (error, results, fields) {
         if (error) reject(error);
         resolve(results)
       }
     );
-
-
   })
-
+}
+const getIngredientByUseridAndId = (userid, id) => {
+  console.log(userid, id)
+  return new Promise((resolve, reject) => {
+    if (!userid || !id) {
+      reject({ error: true, message: "please provide the required parameters" })
+    }
+    con.query(
+      "SELECT * FROM inventory where userid=? AND id=?",
+      [userid, id],
+      function (error, results, fields) {
+        if (error) reject(error);
+        resolve(results)
+      }
+    );
+  })
 }
 
 module.exports = {
@@ -157,5 +168,6 @@ module.exports = {
   addUserIngredient,
   editUserIngredient,
   deleteUserIngredient,
-  checkUserExistingIngredient,
+  getIngredientsByUserIdAndIngredientIdAndExpiry,
+  getIngredientByUseridAndId
 };

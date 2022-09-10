@@ -1,24 +1,26 @@
 const { default: axios } = require('axios')
-const { response } = require('express')
 
-const searchRecipe = (req, res) => {
-    console.log(`searching for recipes with param: ${req.headers.query} with offset:${req.headers.offset}`)
-    let params = {
-        params: {
-            query: req.headers.query,
-            offset: 0,
-            apiKey: process.env.API_KEY
+const searchRecipe = (query, offset) => {
+    return new Promise((resolve, reject) => {
+        if (!query) reject({ error: true, message: "please provide the required parameters" })
+        let params = {
+            params: {
+                query: query,
+                offset: 0,
+                apiKey: process.env.API_KEY
+            }
         }
-    }
-    if (typeof req.headers.offset !== "undefined") {
-        params.params.offset = req.headers.offset
-    }
-    url = "https://api.spoonacular.com/recipes/complexSearch"
-    axios.get(url, params).then((response) => {
-        res.send(response.data)
-    }).catch((err) => {
-        res.send(err)
+        if (offset) {
+            params.params.offset = offset
+        }
+        url = "https://api.spoonacular.com/recipes/complexSearch"
+        axios.get(url, params).then((response) => {
+            resolve(response.data)
+        }).catch((err) => {
+            reject(err)
+        })
     })
+
 }
 
 const getUserRecipe = (req, res) => {
