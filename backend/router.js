@@ -24,6 +24,8 @@ router.post("/newuser", (req, res) => {
 router.get("/searchIngredient", (req, res) => {
   ingredientController.searchIngredient(req.headers.query, req.headers.offset)
     .then((result) => {
+      console.log(
+        `searching for recipes with param: ${req.headers.query} with offset:${req.headers.offset}`)
       res.send(result)
     }).catch((err) => {
       res.send(err)
@@ -42,39 +44,65 @@ router.get("/ingredient", (req, res) => {
 });
 
 //4 add a new ingredient to the user's inventory
-router.post("/ingredient", () => {
-  const ingredient = {
+router.post("/ingredient", async (req, res) => {
+  const record = {
+    userid: req.body.userid,
     ingredientid: req.body.ingredientid,
     quantity: req.body.quantity,
     expiry: req.body.expiry,
     name: req.body.name,
     category: req.body.category
   }
-  res.send(ingredientController.addUserIngredient(req.body.userid, ingredient))
+
+
+
+  //check if already already exist
+  // try {
+  //   const result = await ingredientController.checkUserExistingIngredient(record)
+  //   res.send(result)
+
+  // } catch (err) {
+  //   res.send(err)
+  // }
+
+
+  ingredientController.addUserIngredient(record)
+    .then((result) => {
+      res.send(result)
+    }).catch((err) => {
+      res.send(err)
+    })
+
 });
 
 //edit the ingredient based userid and ingredient details
 router.put('/ingredient', (req, res) => {
-  const ingredient = {
+  const record = {
+    id: req.body.id,
+    userid: req.body.userid,
     ingredientid: req.body.ingredientid,
     quantity: req.body.quantity,
     expiry: req.body.expiry,
     name: req.body.name,
     category: req.body.category
   }
-  res.send(ingredientController.editUserIngredient(req.body.userid, ingredient))
+  ingredientController.editUserIngredient(record)
+    .then((result) => {
+      res.send(result)
+    }).catch((err) => {
+      res.send(err)
+    })
 })
 
 // delete a ingredient in the user's inventory
 router.delete("/ingredient", (req, res) => {
-  const result = ingredientController.getUserIngredients(req.body.userid, req.body.id)
-  if (typeof result !== "undefined") {
-    ingredientController.deleteUserIngredient(req.body.userid)
-    return res.send("success")
-  }
-  return res.send("unable to delete user ingredient")
+  ingredientController.deleteUserIngredient(req.body.userid, req.body.id)
+    .then((result) => {
+      res.send(result)
+    }).catch((err) => {
+      res.send(err)
+    })
 
-  res.send(ingredientController.deleteUserIngredient(req.body.userid, req.body.id))
 });
 
 // discard ingredient => delete the ingredient, then record the deletion

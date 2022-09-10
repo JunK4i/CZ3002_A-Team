@@ -3,9 +3,6 @@ var con = require("../utility/dbconfig");
 
 const searchIngredient = (query, offset) => {
   return new Promise((resolve, reject) => {
-    console.log(
-      `searching for recipes with param: ${query} with offset:${offset}`
-    );
     let params = {
       params: {
         query: query,
@@ -52,8 +49,8 @@ const getUserIngredients = (userid) => {
 
 // if same expiry, add in as same ingredient, instead of separate
 const addUserIngredient = (record) => {
-
   return new Promise((resolve, reject) => {
+    console.log(record)
     if (!record.userid || !record.ingredientid || !record.quantity || !record.expiry || !record.name || !record.category) {
       reject({
         error: true,
@@ -64,11 +61,11 @@ const addUserIngredient = (record) => {
       "INSERT INTO inventory SET userid=?, ingredientid=?, quantity=?, expiry=?, name=?, category=?  ",
       [record.userid, record.ingredientid, record.quantity, record.expiry, record.name, record.category],
       function (error, results, fields) {
-        if (error) reject(error);
+        if (error) throw (error);
         resolve(results)
-
       }
     );
+
 
     // con.query(
     //   "SELECT * FROM inventory WHERE userid=? and ingredientid=? and  expiry=? and name=? and category=?; ",
@@ -100,32 +97,59 @@ const addUserIngredient = (record) => {
 
 };
 
-const editUserIngredient = (userid, ingredient) => {
-  console.log("editing user ingredient")
-  return "success"
+const editUserIngredient = (record) => {
+  return new Promise((resolve, reject) => {
+    if (!record.id || !record.userid || !record.ingredientid || !record.quantity || !record.expiry || !record.name || !record.category) {
+      reject({ error: true, message: "Please provide the required parameters. ", })
+    }
+    con.query("UPDATE inventory SET quantity=? WHERE id=? AND userid=? AND expiry=?",
+      [record.quantity, record.id, record.userid, record.expiry], function (error, results, fields) {
+        if (error) {
+          reject(error)
+        }
+        resolve(results)
+      })
+
+  })
 }
 
-const deleteUserIngredient = (req, res) => {
-  var con = require("../utility/dbconfig");
-  let userid = req.body.userid;
-  let id = req.body.id;
-  if (!userid || !id) {
-    return res.status(400).send({
-      error: true,
-      message: "Please provide userid of user and the id",
-    });
-  }
-  con.query(
-    "DELETE FROM inventory WHERE userid=? AND id=? ",
-    [userid, id],
-    function (error, results, fields) {
-      if (error) throw error;
-      return res.send({
-        message: "success",
-      });
+const deleteUserIngredient = (userid, id) => {
+  return new Promise((resolve, reject) => {
+    if (!userid || !id) {
+      reject({ error: true, message: "please provide the required parameters. " })
     }
-  );
+    con.query(
+      "DELETE FROM inventory WHERE userid=? AND id=? ",
+      [userid, id],
+      function (error, results, fields) {
+        if (error) reject(error);
+        resolve(results)
+      }
+    );
+  })
+
 };
+
+const checkUserExistingIngredient = (record) => {
+  return new Promise((resolve, reject) => {
+    console.log(record)
+    if (!record.userid || !record.ingredientid || !record.quantity || !record.expiry || !record.name || !record.category) {
+      reject({ error: true, message: "please provide the required parameters" })
+    }
+    console.log("here")
+    con.query(
+      "SELECT * FROM inventory where userid=?, ingredientid=?, expiry=?",
+      [record.userid, record.ingreidientid, record.expiry],
+      function (error, results, fields) {
+        if (error) reject(error);
+        resolve(results)
+      }
+    );
+
+
+  })
+
+}
 
 module.exports = {
   searchIngredient,
@@ -133,4 +157,5 @@ module.exports = {
   addUserIngredient,
   editUserIngredient,
   deleteUserIngredient,
+  checkUserExistingIngredient,
 };
