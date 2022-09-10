@@ -132,12 +132,23 @@ router.get("/searchRecipe", (req, res) => {
 
 // retrive recipe that the user is able to make
 router.get("/recommendRecipe", (req, res) => {
-  res.send(recipeController.getUserRecipe(req.headers.userid))
+  recipeController.recommendRecipe(req.headers.userid)
+    .then((result) => {
+      res.send(result)
+    }).catch((err) => {
+      res.send(err)
+    })
 });
 
 // Get information about a recipe
 router.get("/recipeInformation", (req, res) => {
-  res.send(recipeController.getRecipeInformation(req.headers.recipeid))
+  console.log(`retrieving recipe with id: ${req.headers.recipeid}`)
+  recipeController.getRecipeInformation(req.headers.recipeid)
+    .then((result) => {
+      res.send(result)
+    }).catch((err) => {
+      res.send(err)
+    })
 });
 
 // get get a percentage of food waste for each category in a pie chart, then total waste of each month
