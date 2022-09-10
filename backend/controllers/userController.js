@@ -1,22 +1,18 @@
-const createNewUser = (req, res) => {
-  var con = require("../utility/dbconfig");
-  let userid = req.body.userid;
-  let name = req.body.name;
-  if (!userid || !name) {
-    return res
-      .status(400)
-      .send({ error: true, message: "Please provide userid and name of user" });
-  }
-  con.query(
-    "INSERT INTO user SET userid=?, name=? ",
-    [userid, name],
-    function (error, results, fields) {
-      if (error) throw error;
-      return res.send({
-        message: "success",
-      });
+const createNewUser = (userid, name) => {
+  return new Promise((resolve, reject) => {
+    var con = require("../utility/dbconfig");
+    if (!userid || !name) {
+      reject({ error: true, message: "Please provide userid and name of user" })
     }
-  );
+    con.query(
+      "INSERT INTO user SET userid=?, name=? ",
+      [userid, name],
+      function (error, results, fields) {
+        if (error) reject(error);
+        resolve(results);
+      }
+    );
+  })
 };
 
 module.exports = { createNewUser };

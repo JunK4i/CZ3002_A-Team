@@ -7,15 +7,14 @@ const route = require("./router.js");
 var app = express();
 dotenv.config();
 
-app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
     extended: true,
   })
 );
-
+app.use(bodyParser.json());
 app.use("", route);
-var con = require("./utility/dbconfig");
+require("./utility/dbconfig");
 
 // set port
 app.listen(process.env.PORT, function () {

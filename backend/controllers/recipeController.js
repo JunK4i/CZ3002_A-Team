@@ -38,7 +38,7 @@ const getUserRecipe = (req, res) => {
 
             ingredientString = ""
 
-            Object.keys(result).forEach(
+            Object.keys(results).forEach(
                 (key) => {
                     let row = result[key]
                     url = `https://api.spoonacular.com/food/ingredients/${row.ingredientid}/information`
@@ -47,7 +47,7 @@ const getUserRecipe = (req, res) => {
                             apiKey: process.env.API_KEY
                         }
                     }).then((response) => {
-                        ingredientString += response.data.name
+                        ingredientString += response.data.name + ",+"
                     })
 
                 }
@@ -68,7 +68,7 @@ const getUserRecipe = (req, res) => {
 
 }
 
-const getRecipe = (req, res) => {
+const getRecipeInformation = (req, res) => {
     console.log(`retrieving recipe with id: ${req.headers.recipeid}`)
     url = `https://api.spoonacular.com/recipes/${req.headers.recipeid}/information`
     axios.get(url, {
@@ -85,5 +85,5 @@ const getRecipe = (req, res) => {
 module.exports = {
     getUserRecipe,
     searchRecipe,
-    getRecipe
+    getRecipeInformation
 }
