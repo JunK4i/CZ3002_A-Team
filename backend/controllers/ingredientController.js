@@ -41,7 +41,24 @@ const getUserIngredients = (userid) => {
       [userid],
       function (error, results, fields) {
         if (error) reject(error);
-        resolve(results)
+        try {
+          if (results[0].userid != null) {
+            var length = results.length;
+            for (var i = 0; i < length; i++) {
+              let expiry = results[i].expiry;
+              var javaDate = new Date(expiry);
+              var today = new Date();
+              var difference_in_Time = javaDate.getTime() - today.getTime();
+              var difference_in_days = Math.ceil(
+                difference_in_Time / (1000 * 3600 * 24)
+              );
+              results[i].days_to_expiry = difference_in_days;
+            }
+            resolve(results)
+          }
+        } catch (err) {
+          reject(err)
+        }
       }
     );
   })
