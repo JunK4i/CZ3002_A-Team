@@ -43,13 +43,13 @@ const Pagination = ({ currentPage, totalCount, pageSize, onPageChange }) => {
     } else if (lastPage === 2) {
         if (currentPage === 2)
             return (
-                <div className="pagination">
+                <div className="pagination1">
                     {leftArrow} {1}&nbsp;-&nbsp;{currNumber} {rightArrow}
                 </div>
             )
         else {
             return (
-                <div className="pagination">
+                <div className="pagination1">
                     {leftArrow} {currNumber}&nbsp;-&nbsp;{2} {rightArrow}
                 </div>
             )
@@ -70,7 +70,7 @@ const Pagination = ({ currentPage, totalCount, pageSize, onPageChange }) => {
                 : (currentPage < lastPage - 1) ? <span onClick={e => handleClickNumber(e, lastPage)}>...&nbsp;{lastPage}</span> // if current page is less than last page - 1, then right number is ... last page
                     : currNumber; // if current page is last page, then right number is current page
         return (
-            <div className="pagination">
+            <div className="pagination1">
                 {leftArrow} {leftNumber}&nbsp;-&nbsp;{middleNumber}&nbsp;-&nbsp;{rightNumber} {rightArrow}
             </div>
         )
