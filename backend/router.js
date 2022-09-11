@@ -53,27 +53,6 @@ router.post("/ingredient", async (req, res) => {
     name: req.body.name,
     category: req.body.category
   }
-
-
-<<<<<<< HEAD
-=======
-// get user's ingredients
-router.get("/ingredient", ingredientController.getUserIngredient);
-
-// update user's ingredients
-router.put("/ingredient", ingredientController.updateUserIngredient);
->>>>>>> 03b0886b39f240635862e4cf38ec512223fa7578
-
-  //check if already already exist
-  // try {
-  //   const result = await ingredientController.checkUserExistingIngredient(record)
-  //   res.send(result)
-
-  // } catch (err) {
-  //   res.send(err)
-  // }
-
-
   ingredientController.addUserIngredient(record)
     .then((result) => {
       res.send(result)
@@ -167,12 +146,6 @@ router.get("/statisctics", (req, res) => {
 // reduce the servings of ingredients in the recipe by 1
 router.put("/useRecipe", (req, res) => {
   return res.send(ingredientController.useRecipe(req.body.userid, req.body.recipeid))
-
-<<<<<<< HEAD
 })
-=======
-// Make the recipe using ingredients that users have
-router.put("/useRecipe", recipeController.useRecipe);
 
->>>>>>> 03b0886b39f240635862e4cf38ec512223fa7578
 module.exports = router;
