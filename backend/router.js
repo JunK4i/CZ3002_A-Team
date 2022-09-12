@@ -94,16 +94,12 @@ router.delete("/ingredient", (req, res) => {
 
 // discard ingredient => delete the ingredient, then record the deletion
 router.delete('/discardIngredient', async (req, res) => {
-  try {
-    const result = await ingredientController.getIngredientByUseridAndId(req.body.userid, req.body.id)
-    if (result.length === 1) {
-      await ingredientController.deleteUserIngredient(req.body.userid, req.body.id)
+  ingredientController.discardUserIngredient(req.body.userid, req.body.id)
+    .then((result) => {
       res.send("success")
-    }
-  } catch (err) {
-    res.send("error has occured,unable to delete")
-  }
-
+    }).catch((err) => {
+      res.send(err)
+    })
 })
 
 // search for recipe with search params
@@ -139,8 +135,14 @@ router.get("/recipeInformation", (req, res) => {
 });
 
 // get get a percentage of food waste for each category in a pie chart, then total waste of each month
-router.get("/statisctics", (req, res) => {
-  return res.send(wasteController.getStats(req.headers.userid))
+router.get("/getStats", (req, res) => {
+  wasteController.getStats(req.headers.userid)
+    .then((result) => {
+      res.send(result)
+    }).catch((err) => {
+      res.send(err)
+    })
+
 })
 
 // reduce the servings of ingredients in the recipe by 1

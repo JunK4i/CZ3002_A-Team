@@ -1,5 +1,6 @@
 const { default: axios } = require("axios");
 var con = require("../utility/dbconfig");
+const { recordWaste } = require('./wasteController');
 
 const searchIngredient = (query, offset) => {
   return new Promise((resolve, reject) => {
@@ -144,8 +145,24 @@ const deleteUserIngredient = (userid, id) => {
       }
     );
   })
-
 };
+
+const discardUserIngredient = (userid, id) => {
+  return new Promise(async (resolve, reject) => {
+    if (!userid || !id) {
+      reject({ error: true, message: "please provide the required parameters. " })
+    }
+    try {
+      let result = await getIngredientByUseridAndId(userid, id)
+      if (result.length === 1) {
+        await deleteUserIngredient(userid, id)
+        result[0].userid = userid
+        await recordWaste(result[0])
+      }
+      resolve("success")
+    } catch (err) { reject(err) }
+  })
+}
 
 const getIngredientsByUserIdAndIngredientIdAndExpiry = (userid, ingredientid, expiry) => {
   return new Promise((resolve, reject) => {
@@ -207,6 +224,7 @@ module.exports = {
   addUserIngredient,
   editUserIngredient,
   deleteUserIngredient,
+  discardUserIngredient,
   getIngredientsByUserIdAndIngredientIdAndExpiry,
   getIngredientByUseridAndId,
   getIngredientByUserIdAndIngredientId,
