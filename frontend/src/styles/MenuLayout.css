@@ -2,6 +2,8 @@
   display: flex;
   width: 100%;
   align-items: stretch;
+  height: 100%;
+  overflow: auto;
 }
 
 body {
@@ -29,6 +31,8 @@ a:focus {
   color: #adb5bd;
   margin-left: -250px;
   transition: all 0.5s;
+  height: 100vh;
+  /* position: fixed; */
 }
 
 .sidebar.is-open {
@@ -113,10 +117,11 @@ li a.dropdown-toggle::after {
     CONTENT STYLE
 ----------------------------------------------------- */
 .content {
-  padding: 20px;
+  /* padding: 20px; */
   margin-left: 0;
   height: 100vh;
   max-width: 80%;
+  position: relative;
 }
 
 @media only screen and (max-width: 575.98px) {
@@ -128,6 +133,7 @@ li a.dropdown-toggle::after {
     /* margin-left: 100%; */
     display: none;
     transition: all 0.5s;
+    padding-left: 250px;
   }
 
   .sidebar.is-open {
