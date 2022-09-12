@@ -7,6 +7,7 @@ import "../styles/Common.css";
 import "../styles/Ingredients.css";
 import Pagination from "./pagination";
 import axios from "axios";
+
 /**
  * @param {*} param0 
  * @returns Page display when the user navigates to ingredients from the home sidemenu. Used in App.js
@@ -17,12 +18,15 @@ const Ingredients = ({ children }) => {
     const [filterValue, setFilterValue] = React.useState("Category");
     const [ingredients, setIngredients] = React.useState([]);
     const [currentPage, setCurrentPage] = React.useState(1);
+    const [optionsOpen, setOptionsOpen] = React.useState([]); // array of booleans to keep track of which row option is open
+    const [dialogOpen, setDialogOpen] = React.useState(false);
     // constants
     const categoryList = ["Category", "Dairy", "Meat", "Vegetable", "Fruit", "Grain", "Spice", "Other"];
     const api = axios.create({ baseURL: 'to_be_filled' });
     // hooks
     React.useEffect(() => {
         setIngredients(fakeData.results);
+        setOptionsOpen(Array(fakeData.results.length).fill(false));
         // getInventory(); disable until backend is ready
     }, []);
 
@@ -64,6 +68,7 @@ const Ingredients = ({ children }) => {
         ],
     }
 
+    // fetch functions
     async function getInventory() {
         let response = await api.get('/ingredients');
         if (response.status = 200) {
@@ -73,11 +78,43 @@ const Ingredients = ({ children }) => {
         }
     }
 
-    // callback passed into pagination component
-    function handlePageChange(newPage) {
+    // submit functions
+
+    // handlers
+    function handleClickDots(e, index) {
+        e.preventDefault();
+        console.log("click dots");
+        let newOptionsOpen = Array(optionsOpen.length).fill(false); // close everything
+        newOptionsOpen[index] = !optionsOpen[index]; // toggle the one clicked
+        setOptionsOpen(newOptionsOpen);
+    }
+
+    function handlePageChange(newPage) { // callback passed into pagination component
         setCurrentPage(newPage);
     }
 
+    function handleAddIngredient() {
+        console.log("add ingredient");
+        setDialogOpen(true);
+
+    }
+
+    function handleConsume(e, index) {
+        e.preventDefault();
+        console.log("consumed", index);
+    }
+
+    function handleThrowAway(e, index) {
+        e.preventDefault();
+        console.log("throw away", index);
+    }
+
+    function handleEditServings(e, index) {
+        e.preventDefault();
+        console.log("edit servings", index);
+    }
+
+    // UI components
     return (
         <Container>
             <Row>
@@ -89,11 +126,11 @@ const Ingredients = ({ children }) => {
                 </Col>
                 <Col className="col-md-2 align-self-end flex justify-content-center">
                     <button type="button" className="btn btn-warning" style={{ textSize: "10px", fontWeight: "bold", height: "45%", width: "70%" }}>
-                        <i className="bi-plus-circle-fill"></i> Add Ingredient</button>
+                        <i className="bi-plus-circle-fill" onClick={handleAddIngredient}></i> Add Ingredient</button>
                 </Col>
             </Row>
             <div className="white-card gx-3" style={{ marginTop: "20px" }}>
-                <Row style={{ padding: "15px 10px 5px 10px" }}>
+                <Row style={{ padding: "15px 10px" }}>
                     <Col className="col-md-5">
                         <div>
                             <div className="input-group">
@@ -140,7 +177,19 @@ const Ingredients = ({ children }) => {
                                 <div>{ingredient.quantity}</div>
                                 <div>{ingredient.expiry}</div>
                                 <div>{ingredient.days_to_expiry}</div>
-                                <div className="rotate-90"><i className="bi-three-dots"></i></div>
+                                <div className="ingredients-icon" onClick={e => handleClickDots(e, index)}>
+                                    <div className="rotate-90"><i className="bi-three-dots"></i>
+                                    </div>
+                                    {optionsOpen[index] &&
+                                        <div className="ingredients-options-wrapper">
+                                            <div className="ingredients-options">
+                                                <div className="ingredients-option" onClick={handleConsume}>Consume</div>
+                                                <div className="ingredients-option" onClick={handleThrowAway}>Throw Away</div>
+                                                <div className="ingredients-option" onClick={handleEditServings}>Edit Servings</div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
                             </div>
                         )
                     })}
