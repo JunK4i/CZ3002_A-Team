@@ -73,39 +73,45 @@ const recommendRecipe = (userid) => {
 
 const useRecipe = (userid, recipeid) => {
   return new Promise(async (resolve, reject) => {
-    url = `https://api.spoonacular.com/recipes/${req.headers.recipeid}/information`;
-    const result = await axios.get(url, {
+    url = `https://api.spoonacular.com/recipes/${recipeid}/information`;
+    const apiResponse = await axios.get(url, {
       params: {
         apiKey: process.env.API_KEY,
       },
     })
-    let length = result.data.extendedIngredients.length
-    console.log(length)
-    // .then((response) => {
-    //   var length = response.data.extendedIngredients.length;
-    //   console.log(response.extendedIngredients)
-    //   for (var i = 0; i < length; i++) {
-    //     con.query(
-    //       "SELECT * FROM inventory WHERE userid=? AND ingredientid=?",
-    //       [userid, response.data.extendedIngredients[i].id],
-    //       function (error, results, fields) {
-    //         if (error) throw error;
-    //       });
-    //     con.query(
-    //       "SELECT * FROM inventory WHERE userid=? AND ingredientid=?", []
-    //     )
-    //   }
-    //   res.send(response.data.extendedIngredients);
-    // })
-    // .catch((err) => {
-    //   res.send(err);
-    // });
-
+    let ingredients = apiResponse.data.extendedIngredients
+    let length = ingredients.length
+    let tempIngredientList = []
+    for (let i = 0; i < length; i++) {
+      const result = await ingredientController.getIngredientByUserIdAndIngredientId(userid, ingredients[i].id)
+      if (result.length > 1)
+      // pick the correct one then add to the temp list
+      // sort date, check if no expiry, check quantity
+      {
+        result.sort((a, b) => {
+          return new Date(a.expiry, b.expiry)
+        })
+        for (let i = 0; i < result.length; i++) {
+          if (Date.parse(new Date(result[i].expiry)) - Date.parse(new Date()) < 0) continue
+          tempIngredientList.push([i])
+          break
+        }
+      }
+      else if (result.length === 1) {
+        tempIngredientList.push(result[0])
+      }
+    }
+    for (let i = 0; i < tempIngredientList.length; i++) {
+      if (tempIngredientList[i].quantity <= 1) {
+        await ingredientController.deleteUserIngredient(userid, tempIngredientList[i].id)
+      }
+      else {
+        await ingredientController.useIngredientByUserIdAndId(userid, tempIngredientList[i].id)
+      }
+    }
+    resolve("success")
   })
-
-};
-
-
+}
 module.exports = {
   searchRecipe,
   getRecipeInformation,

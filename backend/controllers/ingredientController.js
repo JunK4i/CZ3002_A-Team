@@ -179,6 +179,28 @@ const getIngredientByUseridAndId = (userid, id) => {
   })
 }
 
+const getIngredientByUserIdAndIngredientId = (userid, ingredientid) => {
+  if (!userid || !ingredientid) reject({ error: true, message: "Please provide the required parameters." })
+  return new Promise((resolve, reject) => {
+    con.query("SELECT * FROM inventory WHERE userid=? AND ingredientid=?", [userid, ingredientid], (error, results, fields) => {
+      if (error) reject(error)
+      resolve(results)
+    })
+  })
+}
+
+const useIngredientByUserIdAndId = (userid, id) => {
+  return new Promise((resolve, reject) => {
+    if (!userid || !id) reject({ error: true, message: "Please provide the required parameters." })
+    con.query("UPDATE inventory SET quantity = quantity - 1 WHERE userid=? AND id=?", [userid, id], (error, results, fields) => {
+      if (error) reject(error)
+      resolve(results)
+    })
+
+
+  })
+}
+
 module.exports = {
   searchIngredient,
   getUserIngredients,
@@ -186,5 +208,7 @@ module.exports = {
   editUserIngredient,
   deleteUserIngredient,
   getIngredientsByUserIdAndIngredientIdAndExpiry,
-  getIngredientByUseridAndId
+  getIngredientByUseridAndId,
+  getIngredientByUserIdAndIngredientId,
+  useIngredientByUserIdAndId
 };

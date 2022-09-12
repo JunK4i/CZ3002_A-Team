@@ -145,7 +145,14 @@ router.get("/statisctics", (req, res) => {
 
 // reduce the servings of ingredients in the recipe by 1
 router.put("/useRecipe", (req, res) => {
-  return res.send(ingredientController.useRecipe(req.body.userid, req.body.recipeid))
+  // return res.send(ingredientController.useRecipe(req.body.userid, req.body.recipeid))
+  console.log(`user: ${req.body.userid} is using recipe: ${req.body.recipeid}`)
+  recipeController.useRecipe(req.body.userid, req.body.recipeid)
+    .then((result) => {
+      res.send(result)
+    }).catch((err) => {
+      res.send(err)
+    })
 })
 
 module.exports = router;
