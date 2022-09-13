@@ -3,6 +3,7 @@ import { WithNav, WithoutNav } from "./components/outlet";
 import Test from "./routes/recipes";
 import LoginPage from "./routes/login-page";
 import Dashboard from "./routes/dashboard";
+import Ingredients from "./components/ingredients";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
         <Route element={<WithNav />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/recipes" element={<Test />} />
-          <Route path="/ingredients" element={<Test />} />
+          <Route path="/ingredients" element={<Ingredients />} />
         </Route>
       </Routes>
     </BrowserRouter>

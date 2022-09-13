@@ -1,0 +1,31 @@
+
+.ingredients-row-wrapper{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr) 0.2fr;
+    padding: 5px 20px;
+    text-align: center;
+    font-weight: semi-bold;
+}
+
+.ingredients-row-wrapper:nth-child(1){
+    background-color: #f2bb7c;
+    background-clip: padding-box;
+    font-weight: bold;
+    text-align: center;
+}
+
+.ingredients-row-wrapper:hover{
+    background-color: #f9e4cc;
+    background-clip: padding-box;
+    cursor: pointer;
+}
+
+.ingredients-row-wrapper.expiring{
+    color:#E5A706
+}
+.ingredients-row-wrapper.expired{
+    color:#847878
+}
+.ingredients-row-wrapper.expiring-fast{
+    color:#DA2E2E
+}
