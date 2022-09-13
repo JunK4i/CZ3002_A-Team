@@ -1,12 +1,9 @@
-import { Container } from "react-bootstrap";
-import MenuLayout from "./layouts/MenuLayout";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { WithNav, WithoutNav } from "./components/outlet";
-import Ingredients from "./components/ingredients";
 import Test from "./routes/recipes";
 import LoginPage from "./routes/login-page";
-
-
+import Dashboard from "./routes/dashboard";
+import Ingredients from "./components/ingredients";
 
 function App() {
   return (
@@ -17,7 +14,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
         </Route>
         <Route element={<WithNav />}>
-          <Route path="/dashboard" element={<Test />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/recipes" element={<Test />} />
           <Route path="/ingredients" element={<Ingredients />} />
         </Route>
