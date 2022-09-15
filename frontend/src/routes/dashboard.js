@@ -11,6 +11,7 @@ import {
   BarElement,
   Title,
 } from "chart.js";
+import "../styles/Typography.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 ChartJS.register(
@@ -80,8 +81,8 @@ const Dashboard = () => {
 
   return (
     <Container>
-      <h1>Dashboard</h1>
-      <p>Manage your food wastage here.</p>
+      <div className="header1">Dashboard</div>
+      <div className="header-caption mb-4">Manage your food wastage here.</div>
       <Row>
         <Card
           border="light"
