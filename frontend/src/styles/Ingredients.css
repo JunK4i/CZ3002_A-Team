@@ -10,15 +10,16 @@
 .ingredients-row-wrapper:nth-child(1){
     background-color: #f2bb7c;
     background-clip: padding-box;
-    font-weight: bold;
+    font-weight: bolder;
     text-align: center;
+    padding: 10px 20px
 }
 
-.ingredients-row-wrapper:hover{
+/* .ingredients-row-wrapper:hover{
     background-color: #f9e4cc;
     background-clip: padding-box;
     cursor: pointer;
-}
+} */
 
 .ingredients-row-wrapper.expiring{
     color:#E5A706
@@ -29,3 +30,41 @@
 .ingredients-row-wrapper.expiring-fast{
     color:#DA2E2E
 }
+
+.bi-three-dots:hover{
+    color: #6c6c6c;
+    cursor: pointer;
+}
+
+/* allows for absolute positioning to adjust height */
+.ingredients-options-wrapper{ 
+    position: relative;
+    height: 0px;
+    width: 0px;
+}
+
+.ingredients-options{
+    background: white;
+    box-shadow: #847878 0px 0px 5px;
+    position: absolute;
+    padding: 5px 0px;
+    right:-10px;
+    bottom: -40px;
+    z-index: 2;
+    border-radius: 5px;
+    width: max-content;
+}
+
+.ingredients-option{
+    font-size: 12px;
+    padding: 0px 10px;
+    text-align: left;
+}
+
+.ingredients-option:hover{
+    background-color: #b7b2b2;
+    cursor: pointer;
+}
+
+
+
