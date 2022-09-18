@@ -5,6 +5,7 @@ import { Formik } from "formik";
 import { auth } from "../FirebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios";
 
 const schema = Yup.object().shape({
   name: Yup.string()
@@ -32,8 +33,28 @@ const SignUp = (props) => {
     createUserWithEmailAndPassword(auth, values.email, values.password)
       .then((userCredential) => {
         // Post data to backend
-        navigate("/");
-        setSubmitting(false);
+        axios
+          .post("http://localhost:3001/newuser", {
+            userid: `${userCredential.user.uid}`,
+            name: `${values.name}`,
+          })
+          .then(
+            (response) => {
+              if (response.data === "success") {
+                localStorage.setItem("uid", userCredential.user.uid);
+                navigate("/dashboard");
+                setSubmitting(false);
+              }
+            },
+            (error) => {
+              console.log(error);
+              setFieldError(
+                "name",
+                "Please check your connection and try again."
+              );
+              setSubmitting(false);
+            }
+          );
       })
       .catch((error) => {
         const errorCode = error.code;

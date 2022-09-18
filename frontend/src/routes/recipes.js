@@ -216,7 +216,7 @@ const Recipes = () => {
           style={{
             ...cardStyle,
             marginTop: "2em",
-            paddingTop: "10px",
+            padding: "15px",
             height: "536px",
           }}
         >
@@ -270,7 +270,7 @@ const Recipes = () => {
           style={{
             ...cardStyle,
             marginTop: "2em",
-            paddingTop: "10px",
+            padding: "15px",
             height: "506px",
           }}
         >
