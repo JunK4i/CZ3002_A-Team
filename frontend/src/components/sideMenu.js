@@ -1,5 +1,5 @@
 import { React, useState } from "react";
-import { Nav, Button } from "react-bootstrap";
+import { Nav, Button, Row, Col } from "react-bootstrap";
 import "../styles/MenuLayout.css";
 import {
   HouseDoorFill,
@@ -9,6 +9,7 @@ import {
 import { auth } from "../FirebaseConfig";
 import { signOut } from "firebase/auth";
 import { useNavigate, NavLink } from "react-router-dom";
+import Logo from "../images/logo.svg";
 
 const SideMenu = (props) => {
   const [active, setActive] = useState("dashboard");
@@ -27,7 +28,23 @@ const SideMenu = (props) => {
   return (
     <div className="sidebar is-open">
       <div className="sidebar-header">
-        <h3>Recipely</h3>
+        <Row className="pl-3">
+          <Col
+            className="d-flex flex-wrap align-items-center col-2"
+            md={{ offset: 1 }}
+          >
+            <div className="ml-3">
+              <img
+                src={Logo}
+                alt="recipely logo"
+                style={{ width: "60px", height: "60px" }}
+              />
+            </div>
+          </Col>
+          <Col className="">
+            <h3>Recipely</h3>
+          </Col>
+        </Row>
       </div>
 
       <Nav className="flex-column pt-2" onSelect={selectHandler}>
