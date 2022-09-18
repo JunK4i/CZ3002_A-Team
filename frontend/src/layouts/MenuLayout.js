@@ -7,7 +7,7 @@ const MenuLayout = ({ children }) => {
   return (
     <div className="App Wrapper" style={{ backgroundColor: "#F9E4CC" }}>
       <SideMenu />
-      <Container className="content is-open">{children}</Container>
+      <Container className="content is-open mt-4">{children}</Container>
     </div>
   );
 };

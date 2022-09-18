@@ -1,9 +1,10 @@
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { WithNav, WithoutNav } from "./components/outlet";
-import Test from "./routes/recipes";
+import Recipes from "./routes/recipes";
 import LoginPage from "./routes/login-page";
 import Dashboard from "./routes/dashboard";
 import Ingredients from "./components/ingredients";
+import Recipe from "./routes/recipe";
 
 function App() {
   return (
@@ -15,7 +16,8 @@ function App() {
         </Route>
         <Route element={<WithNav />}>
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/recipes" element={<Test />} />
+          <Route path="/recipes" element={<Recipes />} />
+          <Route path="/recipes/:id" element={<Recipe />} />
           <Route path="/ingredients" element={<Ingredients />} />
         </Route>
       </Routes>

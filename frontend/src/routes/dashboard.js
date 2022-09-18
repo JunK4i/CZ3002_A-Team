@@ -1,6 +1,7 @@
-import React from "react";
+import { React, useEffect } from "react";
 import { Card, Container, Row } from "react-bootstrap";
 import { Doughnut, Bar } from "react-chartjs-2";
+import axios from "axios";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -11,6 +12,7 @@ import {
   BarElement,
   Title,
 } from "chart.js";
+import "../styles/Typography.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 ChartJS.register(
@@ -22,18 +24,19 @@ ChartJS.register(
   Legend
 );
 
+const labels = ["May", "Jun", "Jul", "Aug", "Sep"];
+const donutLabels = [
+  "Oil",
+  "Meat",
+  "Grain",
+  "Vegetables",
+  "Fruit",
+  "Dairy",
+  "Condiments",
+];
 const Dashboard = () => {
-  const labels = ["May", "Jun", "Jul", "Aug", "Sep"];
   const doughnutData = {
-    labels: [
-      "Oil",
-      "Meat",
-      "Grain",
-      "Vegetables",
-      "Fruit",
-      "Dairy",
-      "Condiments",
-    ],
+    labels: donutLabels,
     datasets: [
       {
         label: "Food Wastage",
@@ -78,10 +81,12 @@ const Dashboard = () => {
     ],
   };
 
+  useEffect(() => {}, []);
+
   return (
     <Container>
-      <h1>Dashboard</h1>
-      <p>Manage your food wastage here.</p>
+      <div className="header1">Dashboard</div>
+      <div className="header-caption mb-4">Manage your food wastage here.</div>
       <Row>
         <Card
           border="light"
