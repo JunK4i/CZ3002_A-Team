@@ -34,7 +34,7 @@ const SignUp = (props) => {
       .then((userCredential) => {
         // Post data to backend
         axios
-          .post("http://localhost:3001/newuser", {
+          .post("http://localhost:8000/newuser", {
             userid: `${userCredential.user.uid}`,
             name: `${values.name}`,
           })

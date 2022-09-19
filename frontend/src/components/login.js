@@ -25,7 +25,7 @@ const Login = (props) => {
   const submitHandler = (values, { setSubmitting, setFieldError }) => {
     signInWithEmailAndPassword(auth, values.email, values.password)
       .then((userCredential) => {
-        console.log(userCredential.user.uid);
+        localStorage.setItem("uid", userCredential.user.uid);
         // Go into app
         navigate("/dashboard");
         setSubmitting(false);

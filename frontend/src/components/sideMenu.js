@@ -12,17 +12,26 @@ import { useNavigate, NavLink } from "react-router-dom";
 import Logo from "../images/logo.svg";
 
 const SideMenu = (props) => {
-  const [active, setActive] = useState("dashboard");
+  const [active, setActive] = useState(
+    localStorage.getItem("active") == null
+      ? "dashboard"
+      : localStorage.getItem("active")
+  );
   const navigate = useNavigate();
   const logoutHandler = () => {
     signOut(auth).then(() => {
+      localStorage.removeItem("uid");
       navigate("/login");
     });
   };
 
   const selectHandler = (eventKey) => {
     setActive(eventKey);
-    console.log(eventKey);
+    localStorage.setItem("active", eventKey);
+    localStorage.removeItem("searchRecipeValue");
+    localStorage.removeItem("searchedRecipes");
+    localStorage.removeItem("searchedPages");
+    localStorage.removeItem("searchRecipePage");
   };
 
   return (

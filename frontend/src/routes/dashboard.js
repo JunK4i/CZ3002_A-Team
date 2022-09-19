@@ -1,5 +1,5 @@
-import { React, useEffect } from "react";
-import { Card, Container, Row } from "react-bootstrap";
+import { React, useEffect, useState } from "react";
+import { Card, Container, Row, Spinner } from "react-bootstrap";
 import { Doughnut, Bar } from "react-chartjs-2";
 import axios from "axios";
 import {
@@ -24,7 +24,31 @@ ChartJS.register(
   Legend
 );
 
-const labels = ["May", "Jun", "Jul", "Aug", "Sep"];
+const donutDict = {
+  Oil: 0,
+  Meat: 1,
+  Grain: 2,
+  Vegetables: 3,
+  Fruit: 4,
+  Dairy: 5,
+  Condiments: 6,
+};
+
+const barChartLabelDict = {
+  1: "Jan",
+  2: "Feb",
+  3: "Mar",
+  4: "Apr",
+  5: "May",
+  6: "Jun",
+  7: "Jul",
+  8: "Aug",
+  9: "Sep",
+  10: "Oct",
+  11: "Nov",
+  12: "Dec",
+};
+
 const donutLabels = [
   "Oil",
   "Meat",
@@ -34,54 +58,113 @@ const donutLabels = [
   "Dairy",
   "Condiments",
 ];
+const donutColors = [
+  "#F5820E",
+  "#F08D8D",
+  "#EDB996",
+  "#9DE8A2",
+  "#DDED66",
+  "#9BEAFC",
+  "#955F08",
+];
 const Dashboard = () => {
-  const doughnutData = {
-    labels: donutLabels,
+  const [donutData, setDonutData] = useState({
+    labels: [],
     datasets: [
       {
         label: "Food Wastage",
-        data: [3, 4, 2, 8, 7, 2, 1],
-        backgroundColor: [
-          "#F5820E",
-          "#F08D8D",
-          "#EDB996",
-          "#9DE8A2",
-          "#DDED66",
-          "#9BEAFC",
-          "#955F08",
-        ],
-        borderColor: [
-          "#F5820E",
-          "#F08D8D",
-          "#EDB996",
-          "#9DE8A2",
-          "#DDED66",
-          "#9BEAFC",
-          "#955F08",
-        ],
+        data: [],
+        backgroundColor: [],
+        borderColor: [],
         borderWidth: 1,
       },
     ],
-  };
-
-  const barChartData = {
-    labels: labels,
+  });
+  const [barChartData, setBarChartData] = useState({
+    labels: [],
     datasets: [
       {
         label: "Food Wastage",
-        data: [40, 88, 60, 32, 14],
-        backgroundColor: [
-          "#0263FF",
-          "#FF7723",
-          "#8E30FF",
-          "#955F08",
-          "#3D8807",
-        ],
+        data: [],
+        backgroundColor: [],
       },
     ],
-  };
+  });
+  const [loading, setLoading] = useState(false);
+  const [noDonutData, setNoDonutData] = useState(false);
+  const [noBarData, setNoBarData] = useState(false);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setLoading(true);
+    const uid = localStorage.getItem("uid");
+    axios
+      .get("http://localhost:8000/getStats", {
+        headers: {
+          userid: `${uid}`,
+        },
+      })
+      .then(
+        (response) => {
+          var categoryFoodWastageData = [0, 0, 0, 0, 0, 0, 0];
+          var monthlyFoodWastageData = [];
+          var monthlyLabels = [];
+
+          const categoryData = response.data["groupByCategory"];
+          if (categoryData["error"] != true) {
+            for (var i = 0; i < categoryData.length; i++) {
+              var index = donutDict[categoryData[i]["category"]];
+              categoryFoodWastageData[index] = categoryData[i]["SUM(quantity)"];
+            }
+
+            setDonutData({
+              labels: donutLabels,
+              datasets: [
+                {
+                  label: "Food Wastage",
+                  data: categoryFoodWastageData,
+                  backgroundColor: donutColors,
+                  borderColor: donutColors,
+                  borderWidth: 1,
+                },
+              ],
+            });
+          } else {
+            setNoDonutData(true);
+          }
+
+          const monthlyData = response.data["groupByMonth"];
+          if (monthlyData["error"] != true) {
+            for (var i = 0; i < monthlyData.length; i++) {
+              var month = barChartLabelDict[monthlyData[i]["MONTH(expiry)"]];
+              var quantity = monthlyData[i]["SUM(quantity)"];
+              monthlyLabels.push(month);
+              monthlyFoodWastageData.push(quantity);
+            }
+
+            setBarChartData({
+              labels: monthlyLabels,
+              datasets: [
+                {
+                  label: "Food Wastage",
+                  data: monthlyFoodWastageData,
+                  backgroundColor: [
+                    "#0263FF",
+                    "#FF7723",
+                    "#8E30FF",
+                    "#955F08",
+                    "#3D8807",
+                  ],
+                },
+              ],
+            });
+          } else {
+            setNoBarData(true);
+          }
+        },
+        (error) => {}
+      );
+    setLoading(false);
+  }, []);
 
   return (
     <Container>
@@ -94,17 +177,23 @@ const Dashboard = () => {
         >
           <Card.Title>Discarded Ingredients</Card.Title>
           <div style={{ height: "20em", marginBottom: "1em" }}>
-            <Doughnut
-              data={doughnutData}
-              options={{
-                maintainAspectRatio: false,
-                plugins: {
-                  legend: {
-                    position: "right",
+            {loading ? (
+              <Spinner />
+            ) : noDonutData ? (
+              <p>No Data to Show</p>
+            ) : (
+              <Doughnut
+                data={donutData}
+                options={{
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: {
+                      position: "right",
+                    },
                   },
-                },
-              }}
-            />
+                }}
+              />
+            )}
           </div>
         </Card>
       </Row>
@@ -121,17 +210,23 @@ const Dashboard = () => {
         >
           <Card.Title>Food Wastage</Card.Title>
           <div style={{ height: "20em", marginBottom: "1em" }}>
-            <Bar
-              data={barChartData}
-              options={{
-                maintainAspectRatio: false,
-                plugins: {
-                  legend: {
-                    display: false,
+            {loading ? (
+              <Spinner />
+            ) : noBarData ? (
+              <p>No data to show</p>
+            ) : (
+              <Bar
+                data={barChartData}
+                options={{
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: {
+                      display: false,
+                    },
                   },
-                },
-              }}
-            />
+                }}
+              />
+            )}
           </div>
         </Card>
       </Row>
