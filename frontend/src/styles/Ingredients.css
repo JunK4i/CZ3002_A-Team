@@ -15,12 +15,6 @@
     padding: 10px 20px
 }
 
-/* .ingredients-row-wrapper:hover{
-    background-color: #f9e4cc;
-    background-clip: padding-box;
-    cursor: pointer;
-} */
-
 .ingredients-row-wrapper.expiring{
     color:#E5A706
 }
@@ -53,6 +47,7 @@
     z-index: 2;
     border-radius: 5px;
     width: max-content;
+    color: black
 }
 
 .ingredients-option{
@@ -63,6 +58,48 @@
 
 .ingredients-option:hover{
     background-color: #b7b2b2;
+    cursor: pointer;
+}
+
+.dialog-mask{
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    background: transparent;
+    border: none;
+    line-height: normal;
+    cursor: default;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.dialog-card{
+    background-color: #F9E4CC;
+    border-radius: 10px;
+    padding: 20px;
+    width: 400px;
+    height: fit-content;
+    z-index: 11;
+    position: absolute;
+    left:50%; 
+    top:50%; 
+    transform: translate(-50%, -50%)
+}
+
+.x-button{
+    position: absolute;
+    right: 12px;
+    top: 7px;
     cursor: pointer;
 }
 

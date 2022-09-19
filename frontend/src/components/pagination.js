@@ -37,8 +37,7 @@ const Pagination = ({ currentPage, totalCount, pageSize, onPageChange }) => {
 
     const currNumber = <span style={{ fontWeight: "bold" }}>{currentPage}</span>;
 
-
-    if (lastPage === 1) {
+    if (lastPage === 1 || lastPage === 0) {
         return null
     } else if (lastPage === 2) {
         if (currentPage === 2)

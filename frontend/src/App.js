@@ -3,7 +3,7 @@ import { WithNav, WithoutNav } from "./components/outlet";
 import Recipes from "./routes/recipes";
 import LoginPage from "./routes/login-page";
 import Dashboard from "./routes/dashboard";
-import Ingredients from "./components/ingredients";
+import Ingredients from "./routes/ingredients";
 import Recipe from "./routes/recipe";
 
 function App() {
