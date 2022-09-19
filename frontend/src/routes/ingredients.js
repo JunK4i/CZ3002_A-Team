@@ -126,8 +126,6 @@ const Ingredients = ({ children }) => {
                 setData(data);
                 setIngredients(data);
                 setOptionsOpen(Array(data.length).fill(false));
-                let list = data.map((ingredient) => ingredient.category);
-                setCategoryList(["Category", ...new Set(list)]);
             }
         } else {
             console.log("response", response);
@@ -237,10 +235,11 @@ const Ingredients = ({ children }) => {
 
     function filterSearch() {
         try {
-            if (searchValue === "" && searchValue === "Category") {
+            if ((searchValue === "" || searchValue === null) && searchValue === "Category") {
                 setIngredients(data);
             }
             let search = searchValue.toLowerCase();
+            console.log(data);
             let filteredList = data.filter((ingredient) => {
                 // return ingredient.category === filterValue;
                 if (filterValue === "Category") {
@@ -252,8 +251,8 @@ const Ingredients = ({ children }) => {
                 }
             });
             setIngredients(filteredList);
-        } catch {
-            console.log("error filtering");
+        } catch (e) {
+            console.log("error filtering", e);
         }
 
     }
