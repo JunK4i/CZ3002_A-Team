@@ -4,6 +4,7 @@ import LoginImage from "../images/login.svg";
 import { useState } from "react";
 import Login from "../components/login";
 import SignUp from "../components/signup";
+import RecipelyLogo from "../images/recipely.png";
 
 const LoginPage = () => {
   const [signUp, setSignUp] = useState(false);
@@ -20,19 +21,22 @@ const LoginPage = () => {
     <>
       <Container fluid className="" style={{ height: "100vh" }}>
         <Row style={{ height: "100vh" }}>
-          <Col className="mt-5 align-items-center">
-            <div className="text-center">
-              <PersonCircle color="#00BFA6" size={70} />
+          <Col className="">
+            <img src={RecipelyLogo} alt="recipely-logo" />
+
+            <div style={{ padding: "175px" }}>
+              {signUp ? (
+                <SignUp onClickHandler={loginPageHandler} />
+              ) : (
+                <Login onClickHandler={signUpPageHandler} />
+              )}
             </div>
-            {signUp ? (
-              <SignUp onClickHandler={loginPageHandler} />
-            ) : (
-              <Login onClickHandler={signUpPageHandler} />
-            )}
           </Col>
-          <Col className="d-flex flex-wrap align-items-center">
+          <Col
+            className="d-flex flex-wrap align-items-center"
+            style={{ backgroundColor: "#F9E4CC" }}
+          >
             <img
-              className=""
               src={LoginImage}
               alt="login-image"
               style={{ width: "100%", height: "80%" }}

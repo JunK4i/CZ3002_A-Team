@@ -6,6 +6,7 @@ import { auth } from "../FirebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import "../styles/Typography.css";
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -56,6 +57,7 @@ const Login = (props) => {
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: -100, opacity: 0 }}
       >
+        <div className="header1 mb-5">Login</div>
         <Formik
           validationSchema={schema}
           validateOnChange={false}
@@ -77,7 +79,7 @@ const Login = (props) => {
           }) => (
             <Form noValidate onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="loginEmail">
-                <Form.Label>Email</Form.Label>
+                <Form.Label className="fw-bold">Email</Form.Label>
                 <Form.Control
                   required
                   type="email"
@@ -93,7 +95,7 @@ const Login = (props) => {
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="loginPassword">
-                <Form.Label>Password</Form.Label>
+                <Form.Label className="fw-bold">Password</Form.Label>
                 <Form.Control
                   required
                   type="password"
@@ -113,19 +115,48 @@ const Login = (props) => {
                   variant="primary btn-block"
                   type="submit"
                   disabled={isSubmitting}
+                  style={{
+                    backgroundColor: "#F5963D",
+                    borderColor: "#F5963D",
+                    color: "black",
+                    fontWeight: "bold",
+                  }}
                 >
-                  {isSubmitting ? <Spinner animation="border" /> : "Log In"}
+                  {isSubmitting ? (
+                    <Spinner animation="border" className="" />
+                  ) : (
+                    "Log In"
+                  )}
                 </Button>
               </div>
             </Form>
           )}
         </Formik>
-        <Button
-          variant="btn btn-link text-decoration-none p-0 mt-1"
-          onClick={props.onClickHandler}
-        >
-          Create an account
-        </Button>
+        <div className="d-flex align-item-center mt-2">
+          <div
+            style={{
+              flex: 1,
+              height: "1px",
+              backgroundColor: "#65706E",
+              marginTop: "19px",
+            }}
+          />
+          <Button
+            variant="btn btn-link text-decoration-none pl-3 pr-3"
+            onClick={props.onClickHandler}
+            style={{ color: "#65706E", fontWeight: "bold" }}
+          >
+            Sign Up
+          </Button>
+          <div
+            style={{
+              flex: 1,
+              height: "1px",
+              backgroundColor: "#65706E",
+              marginTop: "19px",
+            }}
+          />
+        </div>
       </motion.div>
     </AnimatePresence>
   );
