@@ -80,7 +80,7 @@ const recommendRecipe = (userid) => {
           params: {
             ingredients: searchString,
             apiKey: process.env.API_KEY,
-            number: 500,
+            number: 100,
           },
         })
         .then((response) => {
