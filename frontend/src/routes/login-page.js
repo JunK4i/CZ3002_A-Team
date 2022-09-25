@@ -18,9 +18,9 @@ const LoginPage = () => {
 
   return (
     <>
-      <Container className="mt-lg-5 mt-2">
-        <Row>
-          <Col lg={4} md={6} sm={12} className="mt-5 p-3">
+      <Container fluid className="" style={{ height: "100vh" }}>
+        <Row style={{ height: "100vh" }}>
+          <Col className="mt-5 align-items-center">
             <div className="text-center">
               <PersonCircle color="#00BFA6" size={70} />
             </div>
@@ -30,8 +30,13 @@ const LoginPage = () => {
               <Login onClickHandler={signUpPageHandler} />
             )}
           </Col>
-          <Col lg={8} md={6} sm={12} className="align-middle">
-            <img className="w-100" src={LoginImage} alt="login-image" />
+          <Col className="d-flex flex-wrap align-items-center">
+            <img
+              className=""
+              src={LoginImage}
+              alt="login-image"
+              style={{ width: "100%", height: "80%" }}
+            />
           </Col>
         </Row>
       </Container>

@@ -7,11 +7,13 @@ import {
   InputGroup,
   Form,
   Spinner,
+  Button,
 } from "react-bootstrap";
 import Pagination from "../components/pagination";
 import { Search } from "react-bootstrap-icons";
 import RecipeCard from "../components/recipeCard";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Recipes = () => {
   const navigate = useNavigate();
@@ -28,12 +30,12 @@ const Recipes = () => {
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const [generatedRecipesLoading, setGeneratedRecipesLoading] = useState(false);
+  const [generatedRecipesOffset, setGeneratedRecipesOffset] = useState(0);
 
   const [recommendedRecipe, setRecommendedRecipe] = useState({});
   const [recipeOfTheDay, setRecipeOfTheDay] = useState({});
 
   const [generatedRecipesPage, setGeneratedRecipesPage] = useState(1);
-  const [generatedReceipesSearch, setGeneratedRecipesSearch] = useState("");
   const [generatedRecipes, setGeneratedRecipes] = useState([]);
   const [displayedGeneratedRecipes, setDisplayedGeneratedRecipes] = useState(
     []
@@ -53,6 +55,25 @@ const Recipes = () => {
 
   const recipeSearchPageHandler = (nextPage) => {
     setSearchRecipesPage(nextPage);
+    axios
+      .get("http://localhost:8000/searchRecipe", {
+        headers: {
+          query: searchRecipeValue,
+          offset: (nextPage - 1) * 10,
+        },
+      })
+      .then(
+        (response) => {
+          setSearchRecipesTotalPages(response.data["totalResults"]);
+          setSearchRecipesResults(response.data["results"]);
+          localStorage.setItem(
+            "searchedRecipes",
+            JSON.stringify(response.data["results"])
+          );
+          localStorage.setItem("searchRecipePage", nextPage);
+        },
+        (error) => {}
+      );
   };
 
   const generatedReceipesSearchHandler = (e) => {
@@ -70,6 +91,48 @@ const Recipes = () => {
         }
       }
       setDisplayedGeneratedRecipes(filteredDisplayedRecipes);
+    }
+  };
+
+  const searchRecipeSubmitHandler = () => {
+    setSearchLoading(true);
+    localStorage.setItem("scrollPosition", window.pageYOffset);
+    axios
+      .get("http://localhost:8000/searchRecipe", {
+        headers: {
+          query: searchRecipeValue,
+          offset: 0,
+        },
+      })
+      .then(
+        (response) => {
+          console.log(response);
+          setSearchRecipesTotalPages(response.data["totalResults"]);
+          setSearchRecipesResults(response.data["results"]);
+          localStorage.setItem(
+            "searchedRecipes",
+            JSON.stringify(response.data["results"])
+          );
+          localStorage.setItem("searchedPages", response.data["totalResults"]);
+          localStorage.setItem("searchRecipeValue", searchRecipeValue);
+          localStorage.setItem("searchRecipePage", 1);
+          setSearchLoading(false);
+        },
+        (error) => {}
+      );
+  };
+
+  const searchKeyDownHandler = (e) => {
+    if (e.key === "Enter") {
+      searchRecipeSubmitHandler();
+    }
+  };
+
+  const handleScrollPosition = () => {
+    const scrollPosition = localStorage.getItem("scrollPosition");
+    if (scrollPosition) {
+      window.scrollTo(0, scrollPosition);
+      localStorage.removeItem("scrollPosition");
     }
   };
 
@@ -155,6 +218,23 @@ const Recipes = () => {
     setLoading(true);
     setGeneratedRecipesLoading(true);
     // make api call to get first page of recommended recipes
+    // axios
+    //   .get("http://localhost:8000/recommendRecipe", {
+    //     headers: {
+    //       userid: `${localStorage.getItem("uid")}`,
+    //       offset: generatedRecipesOffset,
+    //     },
+    //   })
+    //   .then(
+    //     (response) => {
+    //       console.log(response);
+    //       setDisplayedGeneratedRecipes(response["results"]);
+    //       setGeneratedRecipesTotalPages(response["totalResults"]);
+    //       setRecommendedRecipe(response["results"][0]);
+    //       setRecipeOfTheDay(response["results"][1]);
+    //     },
+    //     (error) => {}
+    //   );
     const data = fakeGeneratedRecipes;
     setGeneratedRecipes(data.results);
     setDisplayedGeneratedRecipes(data.results);
@@ -164,6 +244,27 @@ const Recipes = () => {
     // take index 1 of result to be recipe of the day
     setRecipeOfTheDay(data.results[1]);
     setGeneratedRecipesLoading(false);
+
+    if (localStorage.getItem("searchRecipeValue") != null) {
+      setSearchRecipeValue(localStorage.getItem("searchRecipeValue"));
+    }
+
+    if (localStorage.getItem("searchedRecipes") != null) {
+      setSearchRecipesResults(
+        JSON.parse(localStorage.getItem("searchedRecipes"))
+      );
+    }
+
+    if (localStorage.getItem("searchRecipePage") != null) {
+      setSearchRecipesPage(localStorage.getItem("searchRecipePage"));
+    }
+
+    if (localStorage.getItem("searchedPages") != null) {
+      setSearchRecipesTotalPages(localStorage.getItem("searchedPages"));
+    }
+
+    handleScrollPosition();
+
     setLoading(false);
   }, []);
 
@@ -287,8 +388,14 @@ const Recipes = () => {
                   placeholder="Search"
                   aria-label="search-all-recipes"
                   aria-describedby="search-2"
+                  onChange={(e) => setSearchRecipeValue(e.target.value)}
+                  onKeyDown={searchKeyDownHandler}
+                  value={searchRecipeValue}
                 />
               </InputGroup>
+            </Col>
+            <Col>
+              <Button onClick={searchRecipeSubmitHandler}>Search</Button>
             </Col>
             <Col>
               <Pagination

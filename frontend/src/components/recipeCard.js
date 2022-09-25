@@ -20,6 +20,7 @@ const RecipeCard = (props) => {
       onMouseEnter={() => setVisible(true)}
       onMouseLeave={() => setVisible(false)}
       onClick={() => {
+        localStorage.setItem("scrollPosition", window.pageYOffset);
         navigate(`/recipes/${props.id}`);
       }}
     >
