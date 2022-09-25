@@ -284,7 +284,7 @@ const Ingredients = ({ children }) => {
                 } else if (searchValue === "") {
                     return ingredient.category === filterValue;
                 } else {
-                    return ingredient.name.toLowerCase().includes(search) && ingredient.category === filterValue.toLowerCase();
+                    return ingredient.name.toLowerCase().includes(search) && ingredient.category === filterValue;
                 }
             });
             setIngredients(filteredList);
