@@ -30,7 +30,7 @@ const Ingredients = ({ children }) => {
     const [addIngredient, setAddIngredient] = React.useState("");
     const [addServings, setAddServings] = React.useState();
     const [addExpiry, setAddExpiry] = React.useState("");
-    const [addCategory, setAddCategory] = React.useState("");
+    const [addCategory, setAddCategory] = React.useState("Dairy");
 
     const [selectedIngredient, setSelectedIngredient] = React.useState("");
 
@@ -56,9 +56,6 @@ const Ingredients = ({ children }) => {
     // hooks
     React.useEffect(() => {
         getInventory();
-        // setData(fakeData);
-        // setIngredients(fakeData);
-        // setOptionsOpen(Array(ingredients.length).fill(false));
     }, []);
 
     React.useEffect(() => {
@@ -69,42 +66,6 @@ const Ingredients = ({ children }) => {
     React.useEffect(() => {
         console.log(addIngredient);
     }, [addIngredient]);
-
-    // fake data
-    const fakeData = [
-        {
-            "id": 19400,
-            "name": "banana chips",
-            "quantity": 23,
-            "expiry": "23/10/2022",
-            "days_to_expiry": 10,
-            "category": "fruit",
-        },
-        {
-            "id": 93779,
-            "name": " liqueur",
-            "quantity": 23,
-            "expiry": "23/10/2022",
-            "days_to_expiry": 3,
-            "category": "fruit",
-        },
-        {
-            "id": 93779,
-            "name": " liqueur",
-            "quantity": 23,
-            "expiry": "23/10/2022",
-            "days_to_expiry": 6,
-            "category": "Other",
-        },
-        {
-            "id": 93779,
-            "name": " liqueur",
-            "quantity": 23,
-            "expiry": "23/10/2022",
-            "days_to_expiry": -1,
-            "category": "fruit",
-        }
-    ]
 
     // fetch functions
     async function getInventory() {
@@ -132,7 +93,109 @@ const Ingredients = ({ children }) => {
         }
     }
 
-    // handlers
+    // submit functions
+    async function handleSubmitIngredient(e) {
+        console.log(addIngredient)
+        if (uid && addIngredient && addServings && addExpiry && addCategory) {
+            setIsLoading(true);
+            console.log("submit ingredient");
+            let response = await api.post('/ingredient', {
+                userid: uid,
+                ingredientid: addIngredient.id,
+                quantity: addServings,
+                expiry: addExpiry,
+                name: addIngredient.name,
+                category: addCategory
+            });
+            console.log("submitIngredient", response);
+            getInventory();
+            setIsLoading(false);
+            setAddOpen(false);
+            setAddSearchValue("");
+            setAddIngredient(null);
+            setAddServings();
+            setAddExpiry("");
+
+        } else {
+            console.log("missing fields");
+            setIsError(true);
+        }
+    }
+
+    async function handleSubmitConsume(e) {
+        console.log(consumeServings, ingredients[selectedIngredient].quantity);
+        if (consumeServings && ingredients[selectedIngredient]) {
+            if (parseInt(consumeServings) === parseInt(ingredients[selectedIngredient].quantity)) { // delete
+                console.log("delete");
+                setIsLoading(true);
+                let response = await api.delete('/ingredient', {
+                    data: {
+                        userid: uid, //req.body.userid, req.body.id
+                        id: ingredients[selectedIngredient].id
+                    }
+                })
+                console.log("submitConsume, delete", response);
+                getInventory();
+                setConsumeServings(null);
+                setIsLoading(false);
+                setConsumeOpen(false);
+            } else { // edit
+                setIsLoading(true);
+                console.log(moment(ingredients[selectedIngredient].expiry, "DD/MM/YYYY").format("YYYY-MM-DD"));
+                let response = await api.put('/ingredient', {
+                    ...ingredients[selectedIngredient],
+                    userid: uid,
+                    quantity: ingredients[selectedIngredient].quantity - consumeServings,
+                    expiry: moment(ingredients[selectedIngredient].expiry, "DD/MM/YYYY").format("YYYY-MM-DD")
+                    //                    ingredient.expiry = moment(ingredient.expiry).format("DD/MM/YYYY");
+
+                });
+                getInventory();
+                setConsumeServings(null);
+                setIsLoading(false);
+                setConsumeOpen(false);
+                console.log("submitConsume, edit", response);
+            }
+        } else {
+            setIsError(true);
+        }
+    }
+
+    async function handleSubmitEdit(e) {
+        if (editExpiryDate && editServings && ingredients[selectedIngredient]) {
+            setIsLoading(true);
+            let response = await api.put('/ingredient', {
+                ...ingredients[selectedIngredient],
+                userid: uid,
+                quantity: parseInt(editServings),
+                expiry: editExpiryDate
+            });
+            getInventory();
+            setEditExpiryDate(null);
+            setEditServings(null);
+            setIsLoading(false);
+            setEditOpen(false);
+            console.log("submitEdit", response);
+
+        } else {
+            setIsError(true);
+        }
+    }
+
+    async function handleSubmitThrow(e) {
+        let response = await api.delete('/discardIngredient', {
+            data: {
+                userid: uid, //req.body.userid, req.body.id
+                id: ingredients[selectedIngredient].id
+            }
+        })
+        console.log("submitThrow", response);
+        getInventory();
+        setThrowOpen(false);
+    }
+
+
+    // event handlers
     function handleClickDots(e, index) {
         e.preventDefault();
         console.log("click dots");
@@ -156,36 +219,6 @@ const Ingredients = ({ children }) => {
         });
     }
 
-    async function handleSubmitIngredient(e) {
-        // router.post("/ingredient", async (req, res) => {
-        //     const record = {
-        //       userid: req.body.userid,
-        //       ingredientid: req.body.ingredientid,
-        //       quantity: req.body.quantity,
-        //       expiry: req.body.expiry,
-        //       name: req.body.name,
-        //       category: req.body.category,
-        //     };
-        console.log(addIngredient)
-        if (uid && addIngredient && addServings && addExpiry && addCategory) {
-            setIsLoading(true);
-            console.log("submit ingredient");
-            let response = await api.post('/ingredient', {
-                userid: uid,
-                ingredientid: addIngredient.id,
-                quantity: addServings,
-                expiry: addExpiry,
-                name: addIngredient.name,
-                category: addCategory
-            });
-            console.log(response);
-            setIsLoading(false);
-        } else {
-            setIsError(true);
-        }
-
-    }
-
     async function handleConsume(e, index) {
         console.log("consumed", index);
         await setSelectedIngredient(index);
@@ -202,6 +235,8 @@ const Ingredients = ({ children }) => {
         console.log("edit servings", index);
         setEditOpen(true);
         setSelectedIngredient(index);
+        setEditServings(ingredients[index].quantity);
+        setEditExpiryDate(moment(ingredients[index].expiryDate, "DD/MM/YYYY").format("YYYY-MM-DD"));
     }
 
     async function handleEnterSearch(e) {
@@ -303,7 +338,7 @@ const Ingredients = ({ children }) => {
                             </div>
                             <label for="Category" className="text-bold">Category</label>
                             <div className="input-group">
-                                <select id="Category" className="form-select" onChange={(e) => setAddCategory(e.target.value)} required>
+                                <select id="Category" className="form-select" value={addCategory} onChange={(e) => setAddCategory(e.target.value)} required>
                                     {defaultCategories.map((category, index) => <option value={category} key={index}>{category}</option>)}
                                 </select>
                             </div>
@@ -328,7 +363,8 @@ const Ingredients = ({ children }) => {
     }
 
     function renderConsume() {
-        console.log("selected ingredient", selectedIngredient);
+        console.log("selected ingredient", selectedIngredient, " ", ingredients[selectedIngredient]);
+        let max = ingredients[selectedIngredient].quantity;
         return (
             <div className="dialog">
                 <div className="dialog-mask"></div>
@@ -338,14 +374,15 @@ const Ingredients = ({ children }) => {
                     <div className="white-card" style={{ marginTop: "10px" }}>
                         <form style={{ padding: "15px" }}>
                             <div className="form-group" >
-                                <label for="servings" className="text-bold">Servings</label>
-                                <input type="number" className="form-control" id="servings" placeholder="Enter Amount" value={consumeServings} onChange={(e) => setConsumeServings(e.target.value)} />
+                                <label for="servings" className="text-bold">{`Servings (max: ${max})`}</label>
+                                <input type="number" className="form-control" id="servings" placeholder="Enter Amount" value={consumeServings} onChange={(e) => setConsumeServings(e.target.value)} min="0" max={`${max}`} />
                             </div>
                         </form>
                         <div style={{ display: "grid", placeItems: "center", paddingBottom: "15px" }}>
-                            <button onClick={handleAddIngredient} type="button" className="btn btn-warning" style={{ textSize: "10px", fontWeight: "bold", height: "100%", width: "60%" }}>
-                                {isLoading ? <div className="spinner-border text-primary" role="status"></div> : "Confirm"}
-                            </button>
+                            {(consumeServings > max) || (consumeServings < 0) ? <div className="alert alert-danger" role="alert">Servings must be less than or equal to {max}</div> :
+                                <button onClick={handleSubmitConsume} type="submit" className="btn btn-warning" style={{ textSize: "10px", fontWeight: "bold", height: "100%", width: "60%" }}>
+                                    {isLoading ? <div className="spinner-border text-primary" role="status"></div> : "Confirm"}
+                                </button>}
                         </div>
                     </div>
                 </div>
@@ -354,6 +391,7 @@ const Ingredients = ({ children }) => {
     }
 
     function renderThrowaway() {
+        console.log("selected ingredient", selectedIngredient, " ", ingredients[selectedIngredient]);
         return (
             <div className="dialog">
                 <div className="dialog-mask"></div>
@@ -361,14 +399,8 @@ const Ingredients = ({ children }) => {
                     <i className="x-button bi-x-square" onClick={e => { setThrowOpen(false); setThrowServings(); }}></i>
                     <div className="dialog-header text-bold">{`Throwaway ${ingredients[selectedIngredient]["name"]}`}</div>
                     <div className="white-card" style={{ marginTop: "10px" }}>
-                        <form style={{ padding: "15px" }}>
-                            <div className="form-group">
-                                <label for="servings" className="text-bold">Servings</label>
-                                <input type="number" className="form-control" id="servings" placeholder="Enter Amount" value={throwServings} onChange={(e) => setThrowServings(e.target.value)} />
-                            </div>
-                        </form>
-                        <div style={{ display: "grid", placeItems: "center", paddingBottom: "15px" }}>
-                            <button onClick={handleAddIngredient} type="button" className="btn btn-warning" style={{ textSize: "10px", fontWeight: "bold", height: "100%", width: "60%" }}>
+                        <div style={{ display: "grid", placeItems: "center", padding: "15px 0px" }}>
+                            <button onClick={handleSubmitThrow} type="submit" className="btn btn-warning" style={{ textSize: "10px", fontWeight: "bold", height: "100%", width: "60%" }}>
                                 {isLoading ? <div className="spinner-border text-primary" role="status"></div> : "Confirm"}
                             </button>
                         </div>
@@ -379,6 +411,7 @@ const Ingredients = ({ children }) => {
     }
 
     function renderEdit() {
+        console.log("selected ingredient", selectedIngredient, " ", ingredients[selectedIngredient]);
         return (
             <div className="dialog">
                 <div className="dialog-mask"></div>
@@ -389,16 +422,16 @@ const Ingredients = ({ children }) => {
                         <form style={{ padding: "15px" }}>
                             <div className="form-group" style={{ marginTop: "15px" }}>
                                 <label for="servings" className="text-bold">Servings</label>
-                                <input type="number" className="form-control" id="servings" placeholder="Enter Amount" value={editServings} onChange={(e) => setEditServings(e.target.value)} />
+                                <input type="number" className="form-control" id="servings" placeholder="Enter Amount" value={editServings} onChange={(e) => setEditServings(e.target.value)} required />
                             </div>
                             <div className="form-group" style={{ marginTop: "15px" }}>
                                 <label for="expiry-date" className="text-bold">Expiry Date</label>
-                                <input type="date" className="form-control" id="expiry-date" placeholder="Enter Expiry Date" value={editExpiryDate} onChange={(e) => setEditExpiryDate(e.target.value)} />
+                                <input type="date" className="form-control" id="expiry-date" placeholder="Enter Expiry Date" value={editExpiryDate} onChange={(e) => setEditExpiryDate(e.target.value)} required />
                             </div>
                         </form>
                         <div style={{ display: "grid", placeItems: "center", paddingBottom: "15px" }}>
-                            <button onClick={handleAddIngredient} type="button" className="btn btn-warning" style={{ textSize: "10px", fontWeight: "bold", height: "100%", width: "60%" }}>
-                                {isLoading ? <div className="spinner-border text-primary" role="status"></div> : "Confirm"}
+                            <button onClick={handleSubmitEdit} type="submit" className="btn btn-warning" style={{ textSize: "10px", fontWeight: "bold", height: "100%", width: "60%" }}>
+                                {isLoading ? <div className="spinner-border text-secondary" role="status"></div> : "Confirm"}
                             </button>
                         </div>
                     </div>
