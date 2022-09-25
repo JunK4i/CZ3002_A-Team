@@ -30,6 +30,7 @@ const Recipes = () => {
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const [generatedRecipesLoading, setGeneratedRecipesLoading] = useState(false);
+  const [generatedRecipesOffset, setGeneratedRecipesOffset] = useState(0);
 
   const [recommendedRecipe, setRecommendedRecipe] = useState({});
   const [recipeOfTheDay, setRecipeOfTheDay] = useState({});
@@ -217,6 +218,23 @@ const Recipes = () => {
     setLoading(true);
     setGeneratedRecipesLoading(true);
     // make api call to get first page of recommended recipes
+    // axios
+    //   .get("http://localhost:8000/recommendRecipe", {
+    //     headers: {
+    //       userid: `${localStorage.getItem("uid")}`,
+    //       offset: generatedRecipesOffset,
+    //     },
+    //   })
+    //   .then(
+    //     (response) => {
+    //       console.log(response);
+    //       setDisplayedGeneratedRecipes(response["results"]);
+    //       setGeneratedRecipesTotalPages(response["totalResults"]);
+    //       setRecommendedRecipe(response["results"][0]);
+    //       setRecipeOfTheDay(response["results"][1]);
+    //     },
+    //     (error) => {}
+    //   );
     const data = fakeGeneratedRecipes;
     setGeneratedRecipes(data.results);
     setDisplayedGeneratedRecipes(data.results);
