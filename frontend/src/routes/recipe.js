@@ -11,11 +11,20 @@ import {
 } from "react-bootstrap";
 import chickenrice from "../images/chicken-rice.jpeg";
 import { useNavigate } from "react-router-dom";
+import { CheckLg, ChevronLeft } from "react-bootstrap-icons";
+import axios from "axios";
 
 const Recipe = (props) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [recipe, setRecipe] = useState({});
+  const [portion, setPortion] = useState("");
+
+  // sets whether the message after clicking the "cooked" button should be showed
+  const [showMessage, setShowMessage] = useState(false);
+
+  // sets which message to be shown. true for good message and false for bad message
+  const [goodMessage, setGoodMessage] = useState(false);
   let { id } = useParams();
 
   const cardStyle = { borderRadius: "30px", marginBottom: "2em" };
@@ -25,6 +34,36 @@ const Recipe = (props) => {
     borderRadius: "30px",
   };
 
+  // Only allows numeric inputs into the textfield
+  const onChangeHandler = (e) => {
+    const result = e.target.value.replace(/\D/g, "");
+    setPortion(result);
+  };
+
+  const cookedHandler = () => {
+    const result = Number(portion);
+    console.log(result);
+    if (result <= 0) {
+      setShowMessage(true);
+      setGoodMessage(false);
+    } else {
+      axios
+        .put("http://localhost:8000/useRecipe", {
+          userid: `${localStorage.getItem("uid")}`,
+          recipeid: id,
+        })
+        .then(
+          (response) => {
+            if (response.data === "success") {
+              setShowMessage(true);
+              setGoodMessage(true);
+            }
+          },
+          (error) => {}
+        );
+    }
+  };
+
   useEffect(() => {
     setLoading(true);
     // make API call to get recipe information using id
@@ -32,8 +71,15 @@ const Recipe = (props) => {
 
   return (
     <Container>
-      <Button onClick={() => navigate("/recipes")}>Back to Recipes</Button>
-      <h1>Chicken Rice</h1>
+      <Button
+        variant="btn btn-link text-decoration-none p-0 mb-4"
+        onClick={() => navigate("/recipes")}
+        style={{ color: "black", fontWeight: "bold" }}
+      >
+        <ChevronLeft className="pb-1" size={30} />
+        Back to Recipes
+      </Button>
+      <div className="header1 mb-4">Chicken Rice</div>
       <Card style={cardStyle}>
         <Card.Img src={chickenrice} style={cardImageStyle} />
       </Card>
@@ -41,13 +87,42 @@ const Recipe = (props) => {
         <h2>This is how you prepare chicken rice </h2>
       </Card>
       <Row>
-        <Col className="col-3">
+        <Col className="col-2">
+          <Button
+            style={{
+              backgroundColor: "#F5963D",
+              borderColor: "#F5963D",
+              color: "black",
+              fontWeight: "bold",
+            }}
+            size="lg"
+            onClick={cookedHandler}
+          >
+            <CheckLg /> Cooked
+          </Button>
+        </Col>
+        <Col className="col-2">
           <InputGroup>
-            <Form.Control aria-label="Number of servings" />
-            <InputGroup.Text>Servings</InputGroup.Text>
-            <Button>Cooked</Button>
+            <Form.Control
+              aria-label="Number of servings"
+              value={portion}
+              onChange={onChangeHandler}
+            />
+            <InputGroup.Text>Portions</InputGroup.Text>
           </InputGroup>
         </Col>
+      </Row>
+      <Row className="mt-3">
+        {showMessage &&
+          (goodMessage ? (
+            <div style={{ fontSize: "20px", color: "green" }}>
+              Good job! We've deducted the relevant ingredients for you.
+            </div>
+          ) : (
+            <div style={{ fontSize: "20px", color: "red" }}>
+              Remember to tell us how many portions you've cooked!
+            </div>
+          ))}
       </Row>
     </Container>
   );

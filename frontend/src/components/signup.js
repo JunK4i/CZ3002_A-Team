@@ -6,6 +6,7 @@ import { auth } from "../FirebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+import { ChevronLeft } from "react-bootstrap-icons";
 
 const schema = Yup.object().shape({
   name: Yup.string()
@@ -78,8 +79,17 @@ const SignUp = (props) => {
         key="signup"
         initial={{ x: -100, opacity: 1 }}
         animate={{ x: 0, opacity: 1 }}
-        // exit={{ x: -100, opacity: 0 }}
       >
+        <Button
+          variant="btn btn-link text-decoration-none p-0 mb-4"
+          onClick={props.onClickHandler}
+          style={{ color: "black" }}
+        >
+          <ChevronLeft className="pb-1" size={30} />
+          Back to Login
+        </Button>
+
+        <div className="header1 mb-3">Sign Up</div>
         <Formik
           validationSchema={schema}
           validateOnChange={false}
@@ -94,7 +104,7 @@ const SignUp = (props) => {
           {({ handleChange, values, isSubmitting, errors, handleSubmit }) => (
             <Form noValidate onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="signupName">
-                <Form.Label>Name</Form.Label>
+                <Form.Label className="fw-bold">Name</Form.Label>
                 <Form.Control
                   required
                   type="text"
@@ -110,7 +120,7 @@ const SignUp = (props) => {
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="signupEmail">
-                <Form.Label>Email</Form.Label>
+                <Form.Label className="fw-bold">Email</Form.Label>
                 <Form.Control
                   required
                   type="email"
@@ -126,7 +136,7 @@ const SignUp = (props) => {
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="signupPassword">
-                <Form.Label>Password</Form.Label>
+                <Form.Label className="fw-bold">Password</Form.Label>
                 <Form.Control
                   required
                   type="password"
@@ -142,7 +152,7 @@ const SignUp = (props) => {
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="signupConfirmPassword">
-                <Form.Label>Confirm Password</Form.Label>
+                <Form.Label className="fw-bold">Confirm Password</Form.Label>
                 <Form.Control
                   required
                   type="password"
@@ -159,9 +169,15 @@ const SignUp = (props) => {
 
               <div className="d-grid gap-2 mt-4">
                 <Button
-                  variant="primary btn-block p-3"
+                  variant="primary btn-block"
                   type="submit"
                   disabled={isSubmitting}
+                  style={{
+                    backgroundColor: "#F5963D",
+                    borderColor: "#F5963D",
+                    color: "black",
+                    fontWeight: "bold",
+                  }}
                 >
                   {isSubmitting ? <Spinner animation="border" /> : "Sign Up"}
                 </Button>
@@ -169,12 +185,6 @@ const SignUp = (props) => {
             </Form>
           )}
         </Formik>
-        <Button
-          variant="btn btn-link text-decoration-none p-0 mt-1"
-          onClick={props.onClickHandler}
-        >
-          Sign in instead
-        </Button>
       </motion.div>
     </AnimatePresence>
   );

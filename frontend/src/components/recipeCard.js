@@ -4,7 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 const RecipeCard = (props) => {
   const navigate = useNavigate();
-  const cardStyle = { borderRadius: "30px", height: "12em", width: "12em" };
+  const cardStyle = {
+    borderRadius: "30px",
+    height: "12em",
+    width: "12em",
+    cursor: "pointer",
+  };
   const cardImageStyle = {
     objectFit: "cover",
     height: "12em",
