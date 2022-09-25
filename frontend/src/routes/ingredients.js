@@ -8,6 +8,8 @@ import "../styles/Ingredients.css";
 import Pagination from "../components/pagination";
 import axios from "axios";
 import moment from "moment";
+import { Search } from "react-bootstrap-icons";
+
 
 /**
  * @param {*} param0 
@@ -464,7 +466,8 @@ const Ingredients = ({ children }) => {
                     <Col className="col-md-5">
                         <div>
                             <div className="input-group">
-                                <input type="text" placeholder="Search..." className="form-control" aria-label="Sizing example input"
+                                <span className="input-group-text" id="inputGroup-sizing-sm"><i className="bi-search"></i></span>
+                                <input type="text" placeholder="Search" className="form-control" aria-label="Sizing example input"
                                     aria-describedby="inputGroup-sizing-default" value={searchValue} onChange={(e) => { setSearchValue(e.target.value) }} />
                             </div>
                         </div>
