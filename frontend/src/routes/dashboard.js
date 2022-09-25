@@ -169,7 +169,7 @@ const Dashboard = () => {
   return (
     <Container>
       <div className="header1">Dashboard</div>
-      <div className="header-caption mb-4">Manage your food wastage here.</div>
+      <div className="header-caption mb-4">Manage your food wastage here</div>
       <Row>
         <Card
           border="light"

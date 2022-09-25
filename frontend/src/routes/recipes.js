@@ -24,6 +24,7 @@ const Recipes = () => {
     objectFit: "cover",
     height: "23em",
     borderRadius: "30px",
+    cursor: "pointer",
   };
 
   // States
@@ -222,7 +223,6 @@ const Recipes = () => {
     //   .get("http://localhost:8000/recommendRecipe", {
     //     headers: {
     //       userid: `${localStorage.getItem("uid")}`,
-    //       offset: generatedRecipesOffset,
     //     },
     //   })
     //   .then(
@@ -385,7 +385,7 @@ const Recipes = () => {
                   <Search />
                 </InputGroup.Text>
                 <Form.Control
-                  placeholder="Search"
+                  placeholder="Search for a Recipe"
                   aria-label="search-all-recipes"
                   aria-describedby="search-2"
                   onChange={(e) => setSearchRecipeValue(e.target.value)}
@@ -395,7 +395,17 @@ const Recipes = () => {
               </InputGroup>
             </Col>
             <Col>
-              <Button onClick={searchRecipeSubmitHandler}>Search</Button>
+              <Button
+                onClick={searchRecipeSubmitHandler}
+                style={{
+                  backgroundColor: "#F5963D",
+                  borderColor: "#F5963D",
+                  color: "black",
+                  fontWeight: "bold",
+                }}
+              >
+                Search
+              </Button>
             </Col>
             <Col>
               <Pagination
@@ -412,6 +422,7 @@ const Recipes = () => {
                 <RecipeCard
                   img={searchRecipesResults[idx].image}
                   name={searchRecipesResults[idx].title}
+                  id={searchRecipesResults[idx].id}
                 />
               </Col>
             ))}
