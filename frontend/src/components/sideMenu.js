@@ -75,9 +75,12 @@ const SideMenu = (props) => {
           </Nav.Link>
         </Nav.Item>
       </Nav>
-      <Button variant="btn btn-blk ml-3" onClick={logoutHandler}>
-        Log Out
-      </Button>
+
+      <div className="logout_box">
+        <Button variant="btn btn-blk ml-3" onClick={logoutHandler}>
+          Log Out
+        </Button>
+      </div>
     </div>
   );
 };
