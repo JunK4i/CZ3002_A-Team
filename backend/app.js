@@ -23,3 +23,5 @@ require("./utility/dbconfig");
 app.listen(process.env.PORT, function () {
   console.log(`Node app is running on ${process.env.PORT}`);
 });
+
+module.exports = app;
