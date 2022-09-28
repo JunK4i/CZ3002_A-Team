@@ -120,8 +120,8 @@ const editUserIngredient = (record) => {
     if (!record.id || !record.userid || !record.ingredientid || !record.quantity || !record.expiry || !record.name || !record.category) {
       reject({ error: true, message: "Please provide the required parameters. ", })
     }
-    con.query("UPDATE inventory SET quantity=? WHERE id=? AND userid=? AND expiry=?",
-      [record.quantity, record.id, record.userid, record.expiry], function (error, results, fields) {
+    con.query("UPDATE inventory SET quantity=?, expiry=? WHERE id=? AND userid=?",
+      [record.quantity, record.expiry, record.id, record.userid], function (error, results, fields) {
         if (error) {
           reject(error)
         }
