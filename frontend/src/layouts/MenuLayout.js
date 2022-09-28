@@ -6,7 +6,9 @@ import "../styles/MenuLayout.css";
 const MenuLayout = ({ children }) => {
   return (
     <div className="App Wrapper" style={{ backgroundColor: "#F9E4CC" }}>
-      <SideMenu />
+      <div className="sideMenu">
+        <SideMenu />
+      </div>
       <Container className="content is-open mt-4">{children}</Container>
     </div>
   );
