@@ -11,6 +11,7 @@ body {
   font-family: "Nunito Sans", sans-serif;
   /*background: #fafafa;*/
   background-color: #f5f9fc;
+  overflow: hidden;
 }
 
 a,
@@ -24,6 +25,15 @@ a:focus {
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
+.sideMenu {
+  min-width: 250px;
+  max-width: 250px;
+  background: #ffffff;
+  color: #adb5bd;
+  margin-left: 0;
+  transition: all 0.5s;
+}
+
 .sidebar {
   min-width: 250px;
   max-width: 250px;
@@ -31,23 +41,34 @@ a:focus {
   color: #adb5bd;
   margin-left: -250px;
   transition: all 0.5s;
-  min-height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
   /* position: fixed; */
 }
 
 .sidebar.is-open {
   margin-left: 0;
   transition: 0.5s;
+  background: #ffffff;
+  color: #adb5bd;
 }
 
 .sidebar-header {
   background: #ffffff;
   color: #000000;
+  position: absolute;
+  margin-left: 20px;
+  margin-top: 10%;
 }
 
 .sidebar-header h3 {
   color: #000000;
-  padding: 1em;
+  padding: 0.5em;
+  position: absolute;
+  margin-left: 30px;
 }
 
 .sidebar ul p {
@@ -67,12 +88,21 @@ a:focus {
   background: #313b4c;
 }
 
+.nav {
+  position: absolute;
+  min-width: 250px;
+  min-height: 100%;
+  margin-top: 40%;
+  margin-left: 0.5%;
+}
+
 .nav-item {
   /* color: #ced4da; */
   color: #adb5bd !important;
   font-weight: 300;
   text-decoration: none;
   margin-left: 2%;
+  margin-top: 1%;
 }
 
 .nav-item.open {
@@ -83,7 +113,7 @@ a:focus {
 .nav-item.active {
   color: #000000;
   background: #f9e4cc !important;
-  width: 90%;
+  width: 95%;
   border-radius: 10px;
   margin-left: 2%;
 }
@@ -92,7 +122,7 @@ a:focus {
   background: #fff6ec;
   color: #fff;
   transition: 0.2s;
-  width: 90%;
+  width: 95%;
   border-radius: 10px;
 }
 
@@ -125,7 +155,6 @@ li a.dropdown-toggle::after {
 ----------------------------------------------------- */
 .content {
   /* padding: 20px; */
-  margin-left: 0;
   height: 100vh;
   max-width: 80%;
   position: relative;
@@ -140,7 +169,6 @@ li a.dropdown-toggle::after {
     /* margin-left: 100%; */
     display: none;
     transition: all 0.5s;
-    padding-left: 250px;
   }
 
   .sidebar.is-open {
