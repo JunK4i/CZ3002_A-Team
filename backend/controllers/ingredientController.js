@@ -43,7 +43,7 @@ const getUserIngredients = (userid) => {
       function (error, results, fields) {
         if (error) reject(error);
         try {
-          if (results[0].userid != null) {
+          if (results.length === 0) {
             var length = results.length;
             for (var i = 0; i < length; i++) {
               let expiry = results[i].expiry;
