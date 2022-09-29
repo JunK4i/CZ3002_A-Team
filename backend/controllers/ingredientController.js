@@ -57,6 +57,9 @@ const getUserIngredients = (userid) => {
             }
             resolve(results)
           }
+          else {
+            resolve(results)
+          }
         } catch (err) {
           reject(err)
         }

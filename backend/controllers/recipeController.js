@@ -64,7 +64,9 @@ const recommendRecipe = (userid) => {
         error: true,
         message: "please provided the required paramters",
       });
+
     ingredientController.getUserIngredients(userid).then((result) => {
+      console.log("test")
       if (result.length === 0)
         reject({
           error: true,
