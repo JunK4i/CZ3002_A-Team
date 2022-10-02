@@ -44,15 +44,15 @@ const getRecipeInformation = (recipeid) => {
         id: recipeid,
         apiKey: process.env.API_KEY,
       },
-    }
-    axios.get(url1, queryParam)
+    };
+    axios
+      .get(url1, queryParam)
       .then((result) => {
-        resolve(result.data)
-      }).catch((err) => {
-        reject(err)
+        resolve(result.data);
       })
-
-
+      .catch((err) => {
+        reject(err);
+      });
   });
 };
 
@@ -66,7 +66,6 @@ const recommendRecipe = (userid) => {
       });
 
     ingredientController.getUserIngredients(userid).then((result) => {
-      console.log("test")
       if (result.length === 0)
         reject({
           error: true,
@@ -77,13 +76,14 @@ const recommendRecipe = (userid) => {
         searchString += ingredient.name + ",+";
       });
       searchString = searchString.substring(0, searchString.length - 2);
-      axios.get("https://api.spoonacular.com/recipes/findByIngredients", {
-        params: {
-          ingredients: searchString,
-          apiKey: process.env.API_KEY,
-          number: 100,
-        },
-      })
+      axios
+        .get("https://api.spoonacular.com/recipes/findByIngredients", {
+          params: {
+            ingredients: searchString,
+            apiKey: process.env.API_KEY,
+            number: 100,
+          },
+        })
         .then((response) => {
           resolve(response.data);
         })
