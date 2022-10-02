@@ -19,7 +19,7 @@ const Recipes = () => {
   const navigate = useNavigate();
 
   // Styles for the cards
-  const cardStyle = { borderRadius: "30px" };
+  const cardStyle = { borderRadius: "30px", height: "23em" };
   const cardImageStyle = {
     objectFit: "cover",
     height: "23em",
@@ -28,20 +28,25 @@ const Recipes = () => {
   };
 
   // States
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [searchLoading, setSearchLoading] = useState(false);
-  const [generatedRecipesLoading, setGeneratedRecipesLoading] = useState(false);
-  const [generatedRecipesOffset, setGeneratedRecipesOffset] = useState(0);
+  const [generatedRecipesLoading, setGeneratedRecipesLoading] = useState(true);
 
   const [recommendedRecipe, setRecommendedRecipe] = useState({});
-  const [recipeOfTheDay, setRecipeOfTheDay] = useState({});
+  const [recipeOfTheDay, setRecipeOfTheDay] = useState({
+    id: 638125,
+    title: "Chicken In A Pot",
+    imageType: "jpg",
+    image: "https://spoonacular.com/recipeImages/638125-312x231.jpg",
+  });
 
   const [generatedRecipesPage, setGeneratedRecipesPage] = useState(1);
   const [generatedRecipes, setGeneratedRecipes] = useState([]);
   const [displayedGeneratedRecipes, setDisplayedGeneratedRecipes] = useState(
     []
   );
-  const [generatedRecipesTotalPages, setGeneratedRecipesTotalPages] =
+  const [noRecommendedRecipes, setNoRecommendedRecipes] = useState(false);
+  const [generatedRecipesTotalResults, setGeneratedRecipesTotalResults] =
     useState(0);
 
   const [searchRecipesPage, setSearchRecipesPage] = useState(1);
@@ -51,6 +56,11 @@ const Recipes = () => {
 
   // Handlers
   const generatedRecipesPageHandler = (nextPage) => {
+    const nextRecipes = Object.entries(generatedRecipes)
+      .slice((nextPage - 1) * 10, (nextPage - 1) * 10 + 10)
+      .map((entry) => entry[1]);
+    console.log(nextRecipes);
+    setDisplayedGeneratedRecipes(nextRecipes);
     setGeneratedRecipesPage(nextPage);
   };
 
@@ -79,16 +89,29 @@ const Recipes = () => {
 
   const generatedReceipesSearchHandler = (e) => {
     if (e.target.value === "") {
-      setDisplayedGeneratedRecipes(generatedRecipes);
+      setDisplayedGeneratedRecipes(
+        Object.entries(generatedRecipes)
+          .slice(
+            (generatedRecipesPage - 1) * 10,
+            (generatedRecipesPage - 1) * 10 + 10
+          )
+          .map((entry) => entry[1])
+      );
     } else {
       let filteredDisplayedRecipes = [];
-      for (let i = 0; i < generatedRecipes.length; i++) {
+      const originalRecipes = Object.entries(generatedRecipes)
+        .slice(
+          (generatedRecipesPage - 1) * 10,
+          (generatedRecipesPage - 1) * 10 + 10
+        )
+        .map((entry) => entry[1]);
+      for (let i = 0; i < originalRecipes.length; i++) {
         if (
-          generatedRecipes[i].title
+          originalRecipes[i].title
             .toLowerCase()
             .includes(e.target.value.toLowerCase())
         ) {
-          filteredDisplayedRecipes.push(generatedRecipes[i]);
+          filteredDisplayedRecipes.push(originalRecipes[i]);
         }
       }
       setDisplayedGeneratedRecipes(filteredDisplayedRecipes);
@@ -107,7 +130,6 @@ const Recipes = () => {
       })
       .then(
         (response) => {
-          console.log(response);
           setSearchRecipesTotalPages(response.data["totalResults"]);
           setSearchRecipesResults(response.data["results"]);
           localStorage.setItem(
@@ -137,113 +159,42 @@ const Recipes = () => {
     }
   };
 
-  // Dummy Fake Data
-  const fakeGeneratedRecipes = {
-    offset: 0,
-    number: 2,
-    results: [
-      {
-        id: 716429,
-        title: "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs",
-        image: "https://spoonacular.com/recipeImages/716429-312x231.jpg",
-        imageType: "jpg",
-      },
-      {
-        id: 715538,
-        title:
-          "What to make for dinner tonight?? Bruschetta Style Pork & Pasta",
-        image: "https://spoonacular.com/recipeImages/715538-312x231.jpg",
-        imageType: "jpg",
-      },
-      {
-        id: 715538,
-        title:
-          "What to make for dinner tonight?? Bruschetta Style Pork & Pasta",
-        image: "https://spoonacular.com/recipeImages/715538-312x231.jpg",
-        imageType: "jpg",
-      },
-      {
-        id: 715538,
-        title:
-          "What to make for dinner tonight?? Bruschetta Style Pork & Pasta",
-        image: "https://spoonacular.com/recipeImages/715538-312x231.jpg",
-        imageType: "jpg",
-      },
-      {
-        id: 715538,
-        title:
-          "What to make for dinner tonight?? Bruschetta Style Pork & Pasta",
-        image: "https://spoonacular.com/recipeImages/715538-312x231.jpg",
-        imageType: "jpg",
-      },
-      {
-        id: 715538,
-        title:
-          "What to make for dinner tonight?? Bruschetta Style Pork & Pasta",
-        image: "https://spoonacular.com/recipeImages/715538-312x231.jpg",
-        imageType: "jpg",
-      },
-      {
-        id: 715538,
-        title:
-          "What to make for dinner tonight?? Bruschetta Style Pork & Pasta",
-        image: "https://spoonacular.com/recipeImages/715538-312x231.jpg",
-        imageType: "jpg",
-      },
-      {
-        id: 715538,
-        title:
-          "What to make for dinner tonight?? Bruschetta Style Pork & Pasta",
-        image: "https://spoonacular.com/recipeImages/715538-312x231.jpg",
-        imageType: "jpg",
-      },
-      {
-        id: 715538,
-        title:
-          "What to make for dinner tonight?? Bruschetta Style Pork & Pasta",
-        image: "https://spoonacular.com/recipeImages/715538-312x231.jpg",
-        imageType: "jpg",
-      },
-      {
-        id: 715538,
-        title:
-          "What to make for dinner tonight?? Bruschetta Style Pork & Pasta",
-        image: "https://spoonacular.com/recipeImages/715538-312x231.jpg",
-        imageType: "jpg",
-      },
-    ],
-    totalResults: 86,
-  };
-
   useEffect(() => {
     setLoading(true);
     setGeneratedRecipesLoading(true);
     // make api call to get first page of recommended recipes
-    // axios
-    //   .get("http://localhost:8000/recommendRecipe", {
-    //     headers: {
-    //       userid: `${localStorage.getItem("uid")}`,
-    //     },
-    //   })
-    //   .then(
-    //     (response) => {
-    //       console.log(response);
-    //       setDisplayedGeneratedRecipes(response["results"]);
-    //       setGeneratedRecipesTotalPages(response["totalResults"]);
-    //       setRecommendedRecipe(response["results"][0]);
-    //       setRecipeOfTheDay(response["results"][1]);
-    //     },
-    //     (error) => {}
-    //   );
-    const data = fakeGeneratedRecipes;
-    setGeneratedRecipes(data.results);
-    setDisplayedGeneratedRecipes(data.results);
-    setGeneratedRecipesTotalPages(data.totalResults);
-    // take index 0 of result to be recommended recipes
-    setRecommendedRecipe(data.results[0]);
-    // take index 1 of result to be recipe of the day
-    setRecipeOfTheDay(data.results[1]);
-    setGeneratedRecipesLoading(false);
+    axios
+      .get("http://localhost:8000/recommendRecipe", {
+        headers: {
+          userid: `${localStorage.getItem("uid")}`,
+        },
+      })
+      .then(
+        (response) => {
+          console.log(response);
+          if (response["data"].error === true) {
+            setNoRecommendedRecipes(true);
+            setGeneratedRecipesLoading(false);
+          } else {
+            let totalResults = Object.keys(response["data"]).length;
+            setGeneratedRecipes(response["data"]);
+            setGeneratedRecipesTotalResults(totalResults);
+            if (totalResults <= 10) {
+              setDisplayedGeneratedRecipes(response["data"]);
+            } else {
+              setDisplayedGeneratedRecipes(
+                Object.entries(response["data"])
+                  .slice(0, 10)
+                  .map((entry) => entry[1])
+              );
+            }
+            setRecommendedRecipe(response["data"][0]);
+            setRecipeOfTheDay(response["data"][1]);
+            setGeneratedRecipesLoading(false);
+          }
+        },
+        (error) => {}
+      );
 
     if (localStorage.getItem("searchRecipeValue") != null) {
       setSearchRecipeValue(localStorage.getItem("searchRecipeValue"));
@@ -293,15 +244,21 @@ const Recipes = () => {
           </Card>
         </Col>
         <Col>
-          <h2>Recommended Recipes</h2>
+          <h2>Recommended Recipe</h2>
           <Card
             style={cardStyle}
             onClick={() => {
               navigate(`/recipes/${recommendedRecipe.id}`);
             }}
           >
+            {console.log(loading)}
             {loading ? (
-              <Spinner />
+              <Spinner animation="border" />
+            ) : noRecommendedRecipes ? (
+              <div style={{ padding: "15px" }}>
+                You have no ingredients! Add some ingredients so we can
+                recommend you a recipe!
+              </div>
             ) : (
               <Card.Img
                 src={recommendedRecipe.image}
@@ -328,7 +285,7 @@ const Recipes = () => {
             <Col className="col col-2">
               <Pagination
                 currentPage={generatedRecipesPage}
-                totalCount={generatedRecipesTotalPages}
+                totalCount={generatedRecipesTotalResults}
                 pageSize={10}
                 onPageChange={generatedRecipesPageHandler}
               />
@@ -349,21 +306,32 @@ const Recipes = () => {
               </InputGroup>
             </Col>
           </Row>
-          <Row xs={1} md={5} className="mb-4">
-            {generatedRecipesLoading ? (
-              <Spinner />
-            ) : (
-              displayedGeneratedRecipes.map((_, idx) => (
-                <Col className="col d-flex justify-content-center mt-2">
+          {generatedRecipesLoading ? (
+            <Spinner animation="border" />
+          ) : noRecommendedRecipes ? (
+            <div>
+              You have no ingredients! Add some ingredients so that we can
+              recommend you some recipes.
+            </div>
+          ) : (
+            <Row xs={1} md={5} className="mb-4">
+              {console.log(displayedGeneratedRecipes)}
+              {displayedGeneratedRecipes.map((_, idx) => (
+                <Col
+                  className="col d-flex justify-content-center mt-2"
+                  key={idx}
+                >
+                  {console.log(displayedGeneratedRecipes[idx])}
                   <RecipeCard
+                    key={displayedGeneratedRecipes[idx].id}
                     img={displayedGeneratedRecipes[idx].image}
                     name={displayedGeneratedRecipes[idx].title}
                     id={displayedGeneratedRecipes[idx].id}
                   />
                 </Col>
-              ))
-            )}
-          </Row>
+              ))}
+            </Row>
+          )}
         </Card>
       </Row>
       <Row>
