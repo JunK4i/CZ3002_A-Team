@@ -19,7 +19,8 @@ const Recipe = (props) => {
   const [loading, setLoading] = useState(false);
   const [recipe, setRecipe] = useState({});
   const [portion, setPortion] = useState("");
-  const [instructions, setInstructions] = useState("test")
+  const [instructions, setInstructions] = useState("")
+  const [ingredients, setIngredients] = useState([])
 
   // sets whether the message after clicking the "cooked" button should be showed
   const [showMessage, setShowMessage] = useState(false);
@@ -74,11 +75,27 @@ const Recipe = (props) => {
       })
         .then((result) => {
           resolve(result.data)
-          // console.log(result.data.instructions)
         }).catch((err) => {
           resolve(err)
         })
     })
+  }
+
+  const recipeDetailsComponent = () => {
+    return <div>
+      <h2>Ingredients</h2>
+      <h4>
+        <ul>
+          {ingredients}
+        </ul>
+
+      </h4>
+      <br></br>
+      <h2>Instructions</h2>
+      <h3>
+        {instructions}
+      </h3>
+    </div>
 
   }
 
@@ -93,6 +110,11 @@ const Recipe = (props) => {
     getRecipeInfo(id)
       .then((result) => {
         setRecipe(result)
+        let ingredientList = []
+        result.extendedIngredients.forEach((ingredient, index) => {
+          ingredientList.push(<li key={index}>{ingredient.name}</li>)
+        })
+        setIngredients(ingredientList)
         parseStringToHtml(result.instructions)
         setInstructions(parseStringToHtml(result.instructions))
         setLoading(false)
@@ -115,7 +137,8 @@ const Recipe = (props) => {
       </Card>
       <Card style={cardStyle}>
         {loading ? <h2>This is how you prepare chicken rice</h2> : <h2>
-          {instructions}
+          {/* {instructions} */}
+          {recipeDetailsComponent()}
         </h2>}
       </Card>
       <Row>
