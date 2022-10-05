@@ -19,6 +19,7 @@ const Recipe = (props) => {
   const [loading, setLoading] = useState(false);
   const [recipe, setRecipe] = useState({});
   const [portion, setPortion] = useState("");
+  const [instructions, setInstructions] = useState("test")
 
   // sets whether the message after clicking the "cooked" button should be showed
   const [showMessage, setShowMessage] = useState(false);
@@ -59,14 +60,43 @@ const Recipe = (props) => {
               setGoodMessage(true);
             }
           },
-          (error) => {}
+          (error) => { }
         );
     }
   };
 
+  const getRecipeInfo = () => {
+    return new Promise((resolve, reject) => {
+      axios.get("http://localhost:8000/recipeInformation", {
+        headers: {
+          recipeid: id
+        }
+      })
+        .then((result) => {
+          resolve(result.data)
+          // console.log(result.data.instructions)
+        }).catch((err) => {
+          resolve(err)
+        })
+    })
+
+  }
+
+  const parseStringToHtml = (string) => {
+    return <div dangerouslySetInnerHTML={{ __html: string }}></div>
+  }
+
   useEffect(() => {
     setLoading(true);
     // make API call to get recipe information using id
+
+    getRecipeInfo(id)
+      .then((result) => {
+        setRecipe(result)
+        parseStringToHtml(result.instructions)
+        setInstructions(parseStringToHtml(result.instructions))
+        setLoading(false)
+      })
   }, []);
 
   return (
@@ -84,7 +114,9 @@ const Recipe = (props) => {
         <Card.Img src={chickenrice} style={cardImageStyle} />
       </Card>
       <Card style={cardStyle}>
-        <h2>This is how you prepare chicken rice </h2>
+        {loading ? <h2>This is how you prepare chicken rice</h2> : <h2>
+          {instructions}
+        </h2>}
       </Card>
       <Row>
         <Col className="col-2">
