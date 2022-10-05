@@ -9,7 +9,6 @@ import {
   Form,
   InputGroup,
 } from "react-bootstrap";
-import chickenrice from "../images/chicken-rice.jpeg";
 import { useNavigate } from "react-router-dom";
 import { CheckLg, ChevronLeft } from "react-bootstrap-icons";
 import axios from "axios";
@@ -19,8 +18,8 @@ const Recipe = (props) => {
   const [loading, setLoading] = useState(false);
   const [recipe, setRecipe] = useState({});
   const [portion, setPortion] = useState("");
-  const [instructions, setInstructions] = useState("")
-  const [ingredients, setIngredients] = useState([])
+  const [instructions, setInstructions] = useState("");
+  const [ingredients, setIngredients] = useState([]);
 
   // sets whether the message after clicking the "cooked" button should be showed
   const [showMessage, setShowMessage] = useState(false);
@@ -61,64 +60,79 @@ const Recipe = (props) => {
               setGoodMessage(true);
             }
           },
-          (error) => { }
+          (error) => {}
         );
     }
   };
 
   const getRecipeInfo = () => {
     return new Promise((resolve, reject) => {
-      axios.get("http://localhost:8000/recipeInformation", {
-        headers: {
-          recipeid: id
-        }
-      })
-        .then((result) => {
-          resolve(result.data)
-        }).catch((err) => {
-          resolve(err)
+      axios
+        .get("http://localhost:8000/recipeInformation", {
+          headers: {
+            recipeid: id,
+          },
         })
-    })
-  }
+        .then((result) => {
+          resolve(result.data);
+        })
+        .catch((err) => {
+          resolve(err);
+        });
+    });
+  };
 
   const recipeDetailsComponent = () => {
-    return <div>
-      <h2>Ingredients</h2>
-      <h4>
-        <ul>
-          {ingredients}
-        </ul>
-
-      </h4>
-      <br></br>
-      <h2>Instructions</h2>
-      <h3>
-        {instructions}
-      </h3>
-    </div>
-
-  }
+    return (
+      <div>
+        <h2>Ingredients</h2>
+        {ingredients}
+        <br></br>
+        <h2>Preparation</h2>
+        <ol type="1"> {instructions} </ol>
+      </div>
+    );
+  };
 
   const parseStringToHtml = (string) => {
-    return <div dangerouslySetInnerHTML={{ __html: string }}></div>
-  }
+    return <div dangerouslySetInnerHTML={{ __html: string }}></div>;
+  };
 
   useEffect(() => {
     setLoading(true);
     // make API call to get recipe information using id
 
-    getRecipeInfo(id)
-      .then((result) => {
-        setRecipe(result)
-        let ingredientList = []
-        result.extendedIngredients.forEach((ingredient, index) => {
-          ingredientList.push(<li key={index}>{ingredient.name}</li>)
-        })
-        setIngredients(ingredientList)
-        parseStringToHtml(result.instructions)
-        setInstructions(parseStringToHtml(result.instructions))
-        setLoading(false)
-      })
+    getRecipeInfo(id).then((result) => {
+      console.log(result);
+      setRecipe(result);
+      let ingredientList = [];
+      result.extendedIngredients.forEach((ingredient, index) => {
+        ingredientList.push(
+          <div key={index} style={{ fontWeight: "normal", fontSize: "20px" }}>
+            {ingredient.original}
+          </div>
+        );
+      });
+      let cleanInstructions = result.instructions.replace(
+        /<\/?[^>]+(>|$)/g,
+        ""
+      );
+      let instructionList = cleanInstructions.split(".");
+      let finalInstructionList = [];
+      console.log(instructionList);
+      instructionList.forEach((instruction, index) => {
+        if (instruction !== "") {
+          finalInstructionList.push(
+            <li key={index} style={{ fontWeight: "normal", fontSize: "20px" }}>
+              {instruction}
+            </li>
+          );
+        }
+      });
+      setIngredients(ingredientList);
+      setInstructions(finalInstructionList);
+      setLoading(false);
+    });
   }, []);
 
   return (
@@ -131,15 +145,12 @@ const Recipe = (props) => {
         <ChevronLeft className="pb-1" size={30} />
         Back to Recipes
       </Button>
-      <div className="header1 mb-4">Chicken Rice</div>
+      <div className="header1 mb-4">{recipe.title}</div>
       <Card style={cardStyle}>
-        <Card.Img src={chickenrice} style={cardImageStyle} />
+        <Card.Img src={recipe.image} style={cardImageStyle} />
       </Card>
-      <Card style={cardStyle}>
-        {loading ? <h2>This is how you prepare chicken rice</h2> : <h2>
-          {/* {instructions} */}
-          {recipeDetailsComponent()}
-        </h2>}
+      <Card style={{ ...cardStyle, padding: "1em" }}>
+        <h2>{recipeDetailsComponent()}</h2>
       </Card>
       <Row>
         <Col className="col-2">
@@ -167,7 +178,7 @@ const Recipe = (props) => {
           </InputGroup>
         </Col>
       </Row>
-      <Row className="mt-3">
+      <Row className="mt-3 mb-3">
         {showMessage &&
           (goodMessage ? (
             <div style={{ fontSize: "20px", color: "green" }}>
