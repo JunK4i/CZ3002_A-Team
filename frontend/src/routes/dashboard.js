@@ -28,7 +28,7 @@ const donutDict = {
   Oil: 0,
   Meat: 1,
   Grain: 2,
-  Vegetables: 3,
+  Vegetable: 3,
   Fruit: 4,
   Dairy: 5,
   Condiments: 6,
@@ -113,6 +113,7 @@ const Dashboard = () => {
           if (categoryData["error"] != true) {
             for (var i = 0; i < categoryData.length; i++) {
               var index = donutDict[categoryData[i]["category"]];
+              console.log(index);
               categoryFoodWastageData[index] = categoryData[i]["SUM(quantity)"];
             }
 
@@ -133,12 +134,22 @@ const Dashboard = () => {
           }
 
           const monthlyData = response.data["groupByMonth"];
+          let monthNumericArray = [];
           if (monthlyData["error"] != true) {
             for (var i = 0; i < monthlyData.length; i++) {
-              var month = barChartLabelDict[monthlyData[i]["MONTH(expiry)"]];
+              var month = monthlyData[i]["MONTH(expiry)"];
               var quantity = monthlyData[i]["SUM(quantity)"];
-              monthlyLabels.push(month);
+              monthNumericArray.push(month);
               monthlyFoodWastageData.push(quantity);
+            }
+            monthNumericArray.sort(function (a, b) {
+              if (a > b) return 1;
+              if (a < b) return -1;
+              return 0;
+            });
+
+            for (var i = 0; i < monthNumericArray.length; i++) {
+              monthlyLabels.push(barChartLabelDict[monthNumericArray[i]]);
             }
 
             setBarChartData({
