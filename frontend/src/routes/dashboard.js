@@ -56,7 +56,7 @@ const donutLabels = [
   "Vegetables",
   "Fruit",
   "Dairy",
-  "Condiments",
+  "Spice",
 ];
 const donutColors = [
   "#F5820E",
