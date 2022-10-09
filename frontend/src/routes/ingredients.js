@@ -260,11 +260,12 @@ const Ingredients = ({ children }) => {
 
   function handleEditServings(e, index) {
     console.log("edit servings", index);
+    console.log("edit ingredient", ingredients[index]);
     setEditOpen(true);
     setSelectedIngredient(index);
     setEditServings(ingredients[index].quantity);
     setEditExpiryDate(
-      moment(ingredients[index].expiryDate, "DD/MM/YYYY").format("YYYY-MM-DD")
+      moment(ingredients[index].expiry, "DD/MM/YYYY").format("YYYY-MM-DD")
     );
   }
 
@@ -627,7 +628,9 @@ const Ingredients = ({ children }) => {
       "selected ingredient",
       selectedIngredient,
       " ",
-      ingredients[selectedIngredient]
+      ingredients[selectedIngredient],
+      " ",
+      editExpiryDate
     );
     return (
       <div className="dialog">
