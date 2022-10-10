@@ -230,8 +230,8 @@ const Ingredients = ({ children }) => {
     setOptionsOpen(newOptionsOpen);
   }
 
+  // callback passed into pagination component
   function handlePageChange(newPage) {
-    // callback passed into pagination component
     setCurrentPage(newPage);
   }
 
@@ -246,9 +246,9 @@ const Ingredients = ({ children }) => {
     });
   }
 
-  async function handleConsume(e, index) {
+  function handleConsume(e, index) {
     console.log("consumed", index);
-    await setSelectedIngredient(index);
+    setSelectedIngredient(index);
     setConsumeOpen(true);
   }
 
