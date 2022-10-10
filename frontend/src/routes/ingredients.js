@@ -78,11 +78,9 @@ const Ingredients = ({ children }) => {
 
   React.useEffect(() => {
     filterSearch();
-    console.log(searchValue, filterValue);
   }, [searchValue, filterValue]);
 
   React.useEffect(() => {
-    console.log(addIngredient);
   }, [addIngredient]);
 
   // fetch functions
@@ -92,7 +90,6 @@ const Ingredients = ({ children }) => {
         userid: uid,
       },
     });
-    console.log(response);
     if (response.status === 200) {
       if (response.data !== undefined) {
         let data = response.data;
@@ -107,16 +104,13 @@ const Ingredients = ({ children }) => {
         setOptionsOpen(Array(data.length).fill(false));
       }
     } else {
-      console.log("response", response);
     }
   }
 
   // submit functions
   async function handleSubmitIngredient(e) {
-    console.log(addIngredient);
     if (uid && addIngredient && addServings && addExpiry && addCategory) {
       setIsLoading(true);
-      console.log("submit ingredient");
       let response = await api.post("/ingredient", {
         userid: uid,
         ingredientid: addIngredient.id,
@@ -125,7 +119,6 @@ const Ingredients = ({ children }) => {
         name: addIngredient.name,
         category: addCategory,
       });
-      console.log("submitIngredient", response);
       getInventory();
       setIsLoading(false);
       setAddOpen(false);
@@ -134,20 +127,17 @@ const Ingredients = ({ children }) => {
       setAddServings();
       setAddExpiry("");
     } else {
-      console.log("missing fields");
       setIsError(true);
     }
   }
 
   async function handleSubmitConsume(e) {
-    console.log(consumeServings, ingredients[selectedIngredient].quantity);
     if (consumeServings && ingredients[selectedIngredient]) {
       if (
         parseInt(consumeServings) ===
         parseInt(ingredients[selectedIngredient].quantity)
       ) {
         // delete
-        console.log("delete");
         setIsLoading(true);
         let response = await api.delete("/ingredient", {
           data: {
@@ -155,7 +145,6 @@ const Ingredients = ({ children }) => {
             id: ingredients[selectedIngredient].id,
           },
         });
-        console.log("submitConsume, delete", response);
         getInventory();
         setConsumeServings(null);
         setIsLoading(false);
@@ -163,11 +152,6 @@ const Ingredients = ({ children }) => {
       } else {
         // edit
         setIsLoading(true);
-        console.log(
-          moment(ingredients[selectedIngredient].expiry, "DD/MM/YYYY").format(
-            "YYYY-MM-DD"
-          )
-        );
         let response = await api.put("/ingredient", {
           ...ingredients[selectedIngredient],
           userid: uid,
@@ -182,7 +166,6 @@ const Ingredients = ({ children }) => {
         setConsumeServings(null);
         setIsLoading(false);
         setConsumeOpen(false);
-        console.log("submitConsume, edit", response);
       }
     } else {
       setIsError(true);
@@ -203,7 +186,6 @@ const Ingredients = ({ children }) => {
       setEditServings(null);
       setIsLoading(false);
       setEditOpen(false);
-      console.log("submitEdit", response);
     } else {
       setIsError(true);
     }
@@ -216,7 +198,6 @@ const Ingredients = ({ children }) => {
         id: ingredients[selectedIngredient].id,
       },
     });
-    console.log("submitThrow", response);
     getInventory();
     setThrowOpen(false);
   }
@@ -224,7 +205,6 @@ const Ingredients = ({ children }) => {
   // event handlers
   function handleClickDots(e, index) {
     e.preventDefault();
-    console.log("click dots");
     let newOptionsOpen = Array(optionsOpen.length).fill(false); // close everything
     newOptionsOpen[index] = !optionsOpen[index]; // toggle the one clicked
     setOptionsOpen(newOptionsOpen);
@@ -240,27 +220,22 @@ const Ingredients = ({ children }) => {
     addSearchResults.forEach((ingredient) => {
       if (ingredient.name === e.target.value) {
         setAddIngredient(ingredient);
-        console.log(ingredient);
         return;
       }
     });
   }
 
   function handleConsume(e, index) {
-    console.log("consumed", index);
     setSelectedIngredient(index);
     setConsumeOpen(true);
   }
 
   function handleThrowAway(e, index) {
-    console.log("throw away", index);
     setThrowOpen(true);
     setSelectedIngredient(index);
   }
 
   function handleEditServings(e, index) {
-    console.log("edit servings", index);
-    console.log("edit ingredient", ingredients[index]);
     setEditOpen(true);
     setSelectedIngredient(index);
     setEditServings(ingredients[index].quantity);
@@ -272,7 +247,6 @@ const Ingredients = ({ children }) => {
   async function handleEnterSearch(e) {
     if (e.key === "Enter") {
       e.preventDefault();
-      console.log("search " + addSearchValue);
       let response = await api.get("/searchingredient", {
         headers: {
           query: addSearchValue,
@@ -286,7 +260,6 @@ const Ingredients = ({ children }) => {
   }
 
   async function handleClickSearch(e) {
-    console.log("search " + addSearchValue);
     let response = await api.get("/searchingredient", {
       headers: {
         query: addSearchValue,
@@ -307,7 +280,6 @@ const Ingredients = ({ children }) => {
         setIngredients(data);
       }
       let search = searchValue.toLowerCase();
-      console.log(data);
       let filteredList = data.filter((ingredient) => {
         // return ingredient.category === filterValue;
         if (filterValue === "Category") {
@@ -491,12 +463,6 @@ const Ingredients = ({ children }) => {
   }
 
   function renderConsume() {
-    console.log(
-      "selected ingredient",
-      selectedIngredient,
-      " ",
-      ingredients[selectedIngredient]
-    );
     let max = ingredients[selectedIngredient].quantity;
     return (
       <div className="dialog">
@@ -570,12 +536,6 @@ const Ingredients = ({ children }) => {
   }
 
   function renderThrowaway() {
-    console.log(
-      "selected ingredient",
-      selectedIngredient,
-      " ",
-      ingredients[selectedIngredient]
-    );
     return (
       <div className="dialog">
         <div className="dialog-mask"></div>
@@ -624,14 +584,6 @@ const Ingredients = ({ children }) => {
   }
 
   function renderEdit() {
-    console.log(
-      "selected ingredient",
-      selectedIngredient,
-      " ",
-      ingredients[selectedIngredient],
-      " ",
-      editExpiryDate
-    );
     return (
       <div className="dialog">
         <div className="dialog-mask"></div>
