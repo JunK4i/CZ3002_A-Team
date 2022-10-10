@@ -341,6 +341,7 @@ const Recipes = () => {
             marginTop: "2em",
             padding: "15px",
             height: "506px",
+            marginBottom: "2em",
           }}
         >
           <Row>
