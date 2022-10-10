@@ -113,7 +113,6 @@ const Dashboard = () => {
           if (categoryData["error"] != true) {
             for (var i = 0; i < categoryData.length; i++) {
               var index = donutDict[categoryData[i]["category"]];
-              console.log(index);
               categoryFoodWastageData[index] = categoryData[i]["SUM(quantity)"];
             }
 
@@ -135,21 +134,22 @@ const Dashboard = () => {
 
           const monthlyData = response.data["groupByMonth"];
           let monthNumericArray = [];
+          let dataDict = {};
           if (monthlyData["error"] != true) {
             for (var i = 0; i < monthlyData.length; i++) {
               var month = monthlyData[i]["MONTH(expiry)"];
               var quantity = monthlyData[i]["SUM(quantity)"];
               monthNumericArray.push(month);
-              monthlyFoodWastageData.push(quantity);
+              dataDict[month] = quantity;
             }
             monthNumericArray.sort(function (a, b) {
               if (a > b) return 1;
               if (a < b) return -1;
               return 0;
             });
-
             for (var i = 0; i < monthNumericArray.length; i++) {
               monthlyLabels.push(barChartLabelDict[monthNumericArray[i]]);
+              monthlyFoodWastageData.push(dataDict[monthNumericArray[i]]);
             }
 
             setBarChartData({
