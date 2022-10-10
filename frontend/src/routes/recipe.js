@@ -44,7 +44,7 @@ const Recipe = (props) => {
   const cookedHandler = () => {
     const result = Number(portion);
     console.log(result);
-    if (result <= 0) {
+    if (result < 0) {
       setShowMessage(true);
       setGoodMessage(false);
     } else {
@@ -103,7 +103,6 @@ const Recipe = (props) => {
     // make API call to get recipe information using id
 
     getRecipeInfo(id).then((result) => {
-      console.log(result);
       setRecipe(result);
       let ingredientList = [];
       result.extendedIngredients.forEach((ingredient, index) => {
@@ -119,7 +118,6 @@ const Recipe = (props) => {
       );
       let instructionList = cleanInstructions.split(".");
       let finalInstructionList = [];
-      console.log(instructionList);
       instructionList.forEach((instruction, index) => {
         if (instruction !== "") {
           finalInstructionList.push(
@@ -167,29 +165,20 @@ const Recipe = (props) => {
             <CheckLg /> Cooked
           </Button>
         </Col>
-        <Col className="col-2">
-          <InputGroup>
-            <Form.Control
-              aria-label="Number of servings"
-              value={portion}
-              onChange={onChangeHandler}
-            />
-            <InputGroup.Text>Portions</InputGroup.Text>
-          </InputGroup>
+        <Col className="col-5">
+          {showMessage &&
+            (goodMessage ? (
+              <div style={{ fontSize: "20px", color: "green" }}>
+                Good job! We've deducted the relevant ingredients for you.
+              </div>
+            ) : (
+              <div style={{ fontSize: "20px", color: "red" }}>
+                Remember to tell us how many portions you've cooked!
+              </div>
+            ))}
         </Col>
       </Row>
-      <Row className="mt-3 mb-3">
-        {showMessage &&
-          (goodMessage ? (
-            <div style={{ fontSize: "20px", color: "green" }}>
-              Good job! We've deducted the relevant ingredients for you.
-            </div>
-          ) : (
-            <div style={{ fontSize: "20px", color: "red" }}>
-              Remember to tell us how many portions you've cooked!
-            </div>
-          ))}
-      </Row>
+      <Row className="mt-4 mb-4"></Row>
     </Container>
   );
 };
