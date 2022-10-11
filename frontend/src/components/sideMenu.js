@@ -21,6 +21,7 @@ const SideMenu = (props) => {
   const logoutHandler = () => {
     signOut(auth).then(() => {
       localStorage.removeItem("uid");
+      localStorage.removeItem("active");
       navigate("/login");
     });
   };
