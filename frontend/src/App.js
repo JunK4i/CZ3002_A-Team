@@ -6,7 +6,7 @@ import Dashboard from "./routes/dashboard";
 import Ingredients from "./routes/ingredients";
 import Recipe from "./routes/recipe";
 
-function App() {
+const App = () => {
   return (
     <BrowserRouter>
       <Routes>
@@ -23,6 +23,6 @@ function App() {
       </Routes>
     </BrowserRouter>
   );
-}
+};
 
 export default App;
