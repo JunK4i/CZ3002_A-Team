@@ -13,6 +13,7 @@ import {
   Title,
 } from "chart.js";
 import "../styles/Typography.css";
+import { useNavigate } from "react-router-dom";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 ChartJS.register(
@@ -68,6 +69,7 @@ const donutColors = [
   "#955F08",
 ];
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [donutData, setDonutData] = useState({
     labels: [],
     datasets: [
@@ -97,6 +99,9 @@ const Dashboard = () => {
   useEffect(() => {
     setLoading(true);
     const uid = localStorage.getItem("uid");
+    if (!uid) {
+      navigate("/login");
+    }
     axios
       .get("http://localhost:8000/getStats", {
         headers: {

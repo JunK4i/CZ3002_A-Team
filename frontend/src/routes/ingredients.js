@@ -9,12 +9,14 @@ import Pagination from "../components/pagination";
 import axios from "axios";
 import moment from "moment";
 import { Search } from "react-bootstrap-icons";
+import { useNavigate } from "react-router-dom";
 
 /**
  * @param {*} param0
  * @returns Page display when the user navigates to ingredients from the home sidemenu. Used in App.js
  */
 const Ingredients = ({ children }) => {
+  const navigate = useNavigate();
   // states
   const [searchValue, setSearchValue] = React.useState("");
   const [filterValue, setFilterValue] = React.useState("Category");
@@ -73,6 +75,9 @@ const Ingredients = ({ children }) => {
   const api = axios.create({ baseURL: "http://localhost:8000" });
   // hooks
   React.useEffect(() => {
+    if (!uid) {
+      navigate("/login");
+    }
     getInventory();
   }, []);
 
@@ -80,8 +85,7 @@ const Ingredients = ({ children }) => {
     filterSearch();
   }, [searchValue, filterValue]);
 
-  React.useEffect(() => {
-  }, [addIngredient]);
+  React.useEffect(() => {}, [addIngredient]);
 
   // fetch functions
   async function getInventory() {

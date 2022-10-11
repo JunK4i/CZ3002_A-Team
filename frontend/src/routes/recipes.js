@@ -161,12 +161,16 @@ const Recipes = () => {
 
   useEffect(() => {
     setLoading(true);
+    const uid = localStorage.getItem("uid");
+    if (!uid) {
+      navigate("/login");
+    }
     setGeneratedRecipesLoading(true);
     // make api call to get first page of recommended recipes
     axios
       .get("http://localhost:8000/recommendRecipe", {
         headers: {
-          userid: `${localStorage.getItem("uid")}`,
+          userid: uid,
         },
       })
       .then(
@@ -321,7 +325,6 @@ const Recipes = () => {
                   className="col d-flex justify-content-center mt-2"
                   key={idx}
                 >
-                  {console.log(displayedGeneratedRecipes[idx])}
                   <RecipeCard
                     key={displayedGeneratedRecipes[idx].id}
                     img={displayedGeneratedRecipes[idx].image}
@@ -392,6 +395,7 @@ const Recipes = () => {
                   img={searchRecipesResults[idx].image}
                   name={searchRecipesResults[idx].title}
                   id={searchRecipesResults[idx].id}
+                  key={searchRecipesResults[idx].id}
                 />
               </Col>
             ))}
