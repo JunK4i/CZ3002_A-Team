@@ -79,7 +79,7 @@ const addUserIngredient = (record) => {
       });
     }
     con.query(
-      "INSERT INTO inventory SET userid=?, ingredientid=?, quantity=?, expiry=?, name=?, category=?  ",
+      "INSERT INTO inventory SET userid=?, ingredientid=?, quantity=?, expiry=?, name=?, category=?",
       [record.userid, record.ingredientid, record.quantity, record.expiry, record.name, record.category],
       function (error, results, fields) {
         if (error) throw (error);

@@ -8,7 +8,6 @@ import "../styles/Ingredients.css";
 import Pagination from "../components/pagination";
 import axios from "axios";
 import moment from "moment";
-import { Search } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
 
 /**
@@ -23,19 +22,18 @@ const Ingredients = ({ children }) => {
   const [data, setData] = React.useState([]);
   const [ingredients, setIngredients] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [categoryList, setCategoryList] = React.useState([
-    "Category",
-    "Dairy",
-    "Meat",
-    "Vegetable",
-    "Fruit",
-    "Grain",
-    "Spice",
-    "Other",
-  ]);
-
+  const categoryList =
+    ["Category",
+      "Dairy",
+      "Meat",
+      "Vegetable",
+      "Fruit",
+      "Grain",
+      "Spice",
+      "Other",
+    ];
+  const [searchType, setSearchType] = React.useState(["selected", "", "", ""]); // [safe,expiring,expiring-fast,expired]
   const [optionsOpen, setOptionsOpen] = React.useState([]); // array of booleans to keep track of which row option is open
-
   const [addOpen, setAddOpen] = React.useState(false);
   const [addSearchValue, setAddSearchValue] = React.useState("");
   const [addSearchResults, setAddSearchResults] = React.useState([]);
@@ -43,24 +41,18 @@ const Ingredients = ({ children }) => {
   const [addServings, setAddServings] = React.useState();
   const [addExpiry, setAddExpiry] = React.useState("");
   const [addCategory, setAddCategory] = React.useState("Dairy");
-
   const [selectedIngredient, setSelectedIngredient] = React.useState("");
-
   const [consumeOpen, setConsumeOpen] = React.useState(false);
   const [consumeServings, setConsumeServings] = React.useState();
-
   const [throwOpen, setThrowOpen] = React.useState(false);
-  const [throwServings, setThrowServings] = React.useState();
-
   const [editOpen, setEditOpen] = React.useState(false);
   const [editServings, setEditServings] = React.useState();
   const [editExpiryDate, setEditExpiryDate] = React.useState("");
-
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
 
-  const uid = localStorage.getItem("uid");
-  //   const uid = "234";
+  const uid = "xtDKw9PlJxXZFPo53RDvF884Cde2"
+  // localStorage.getItem("uid");
   const defaultCategories = [
     "Dairy",
     "Meat",
@@ -83,9 +75,9 @@ const Ingredients = ({ children }) => {
 
   React.useEffect(() => {
     filterSearch();
-  }, [searchValue, filterValue]);
+  }, [searchValue, filterValue, searchType]);
 
-  React.useEffect(() => {}, [addIngredient]);
+  React.useEffect(() => { }, [addIngredient]);
 
   // fetch functions
   async function getInventory() {
@@ -113,6 +105,7 @@ const Ingredients = ({ children }) => {
 
   // submit functions
   async function handleSubmitIngredient(e) {
+    console.log("submitting ingredient", uid, addIngredient, addServings, addExpiry, addCategory);
     if (uid && addIngredient && addServings && addExpiry && addCategory) {
       setIsLoading(true);
       let response = await api.post("/ingredient", {
@@ -164,7 +157,6 @@ const Ingredients = ({ children }) => {
             ingredients[selectedIngredient].expiry,
             "DD/MM/YYYY"
           ).format("YYYY-MM-DD"),
-          //                    ingredient.expiry = moment(ingredient.expiry).format("DD/MM/YYYY");
         });
         getInventory();
         setConsumeServings(null);
@@ -297,7 +289,34 @@ const Ingredients = ({ children }) => {
           );
         }
       });
-      setIngredients(filteredList);
+
+      let [safe, expiring, expiring_soon, expired] = [[], [], [], []];
+      if (searchType[0] === "selected") {
+        safe = filteredList.filter((ingredient) => {
+          return ingredient.days_to_expiry > 7;
+        })
+      }
+      if (searchType[1] === "selected") {
+        expiring = filteredList.filter((ingredient) => {
+          return ingredient.days_to_expiry <= 7 && ingredient.days_to_expiry > 3;
+        })
+      }
+      if (searchType[2] === "selected") {
+        expiring_soon = filteredList.filter((ingredient) => {
+          return ingredient.days_to_expiry <= 3 && ingredient.days_to_expiry >= 0;
+        })
+      }
+      if (searchType[3] === "selected") {
+        expired = filteredList.filter((ingredient) => {
+          return ingredient.days_to_expiry < 0;
+        })
+      }
+      let b = ["", "", "", ""];
+      if (searchType.find((v, i) => v !== b[i]) === undefined) {
+        setIngredients(filteredList);
+      } else {
+        setIngredients([...safe, ...expiring, ...expiring_soon, ...expired])
+      }
     } catch (e) {
       console.log("error filtering", e);
     }
@@ -548,7 +567,6 @@ const Ingredients = ({ children }) => {
             className="x-button bi-x-square"
             onClick={(e) => {
               setThrowOpen(false);
-              setThrowServings();
             }}
           ></i>
           <div className="dialog-header text-bold">{`Throwaway ${ingredients[selectedIngredient]["name"]}`}</div>
@@ -665,7 +683,6 @@ const Ingredients = ({ children }) => {
       </div>
     );
   }
-
   return (
     <Container>
       {addOpen && renderAddDialog()}
@@ -744,11 +761,65 @@ const Ingredients = ({ children }) => {
             <Pagination
               currentPage={currentPage}
               totalCount={ingredients.length}
-              pageSize={10}
+              pageSize={20}
               onPageChange={handlePageChange}
             />
           </Col>
         </Row>
+        <div className="legend">
+          <div className={`legend-item ${searchType[3]}`} onClick={e => {
+            let array = [...searchType];
+            if (searchType[3] === "selected") {
+              array[3] = "";
+              setSearchType(array);
+            } else {
+              array[3] = "selected";
+              setSearchType(array);
+            }
+          }}>
+            <div className="legend-circle" style={{ backgroundColor: "#7c453c" }}></div>
+            Expired
+          </div>
+          <div className={`legend-item ${searchType[2]}`} onClick={e => {
+            let array = [...searchType];
+            if (searchType[2] === "selected") {
+              array[2] = "";
+              setSearchType(array);
+            } else {
+              array[2] = "selected";
+              setSearchType(array);
+            }
+          }}>
+            <div className="legend-circle" style={{ backgroundColor: "#DA2E2E" }} ></div>
+            Expiring in 3 days
+          </div>
+          <div className={`legend-item ${searchType[1]}`} onClick={e => {
+            let array = [...searchType];
+            if (searchType[1] === "selected") {
+              array[1] = "";
+              setSearchType(array);
+            } else {
+              array[1] = "selected";
+              setSearchType(array);
+            }
+          }}>
+            <div className="legend-circle" style={{ backgroundColor: "#E5A706" }}></div>
+            Expring in 7 days
+          </div>
+          <div className={`legend-item ${searchType[0]}`} onClick={e => {
+            let array = [...searchType];
+            if (searchType[0] === "selected") {
+              array[0] = "";
+              setSearchType(array);
+            } else {
+              array[0] = "selected";
+              setSearchType(array);
+            }
+          }}>
+            <div className="legend-circle" style={{ backgroundColor: "black" }}></div>
+            Safe to consume
+          </div>
+        </div>
         <div className="ingredients-grid">
           <div className="ingredients-row-wrapper">
             <div>Ingredient</div> <div>Category</div> <div>Servings</div>{" "}
@@ -774,51 +845,53 @@ const Ingredients = ({ children }) => {
                 } else if (ingredient.days_to_expiry <= 7) {
                   status = "expiring";
                 }
-
-                return (
-                  <div
-                    key={index}
-                    className={`ingredients-row-wrapper ${status}`}
-                  >
-                    <div>{ingredient.name}</div>
-                    <div>{ingredient.category}</div>
-                    <div>{ingredient.quantity}</div>
-                    <div>{ingredient.expiry}</div>
-                    <div>{ingredient.days_to_expiry}</div>
+                if ((index < currentPage * 20) && (index >= (currentPage - 1) * 20)) {
+                  return (
                     <div
-                      className="ingredients-icon"
-                      onClick={(e) => handleClickDots(e, index)}
+                      key={index}
+                      className={`ingredients-row-wrapper ${status}`}
                     >
-                      <div className="rotate-90">
-                        <i className="bi-three-dots"></i>
-                      </div>
-                      {optionsOpen[index] && (
-                        <div className="ingredients-options-wrapper">
-                          <div className="ingredients-options">
-                            <div
-                              className="ingredients-option"
-                              onClick={(e) => handleConsume(e, index)}
-                            >
-                              Consume
-                            </div>
-                            <div
-                              className="ingredients-option"
-                              onClick={(e) => handleThrowAway(e, index)}
-                            >
-                              Throw Away
-                            </div>
-                            <div
-                              className="ingredients-option"
-                              onClick={(e) => handleEditServings(e, index)}
-                            >
-                              Edit Servings
+                      <div>{ingredient.name}</div>
+                      <div>{ingredient.category}</div>
+                      <div>{ingredient.quantity}</div>
+                      <div>{ingredient.expiry}</div>
+                      <div>{ingredient.days_to_expiry}</div>
+                      <div
+                        className="ingredients-icon"
+                        onClick={(e) => handleClickDots(e, index)}
+                      >
+                        <div className="rotate-90">
+                          <i className="bi-three-dots"></i>
+                        </div>
+                        {optionsOpen[index] && (
+                          <div className="ingredients-options-wrapper">
+                            <div className="ingredients-options">
+                              <div
+                                className="ingredients-option"
+                                onClick={(e) => handleConsume(e, index)}
+                              >
+                                Consume
+                              </div>
+                              <div
+                                className="ingredients-option"
+                                onClick={(e) => handleThrowAway(e, index)}
+                              >
+                                Throw Away
+                              </div>
+                              <div
+                                className="ingredients-option"
+                                onClick={(e) => handleEditServings(e, index)}
+                              >
+                                Edit Servings
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
-                  </div>
-                );
+                  );
+                }
+                return null;
               } catch {
                 return null;
               }
