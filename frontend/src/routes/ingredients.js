@@ -32,7 +32,7 @@ const Ingredients = ({ children }) => {
       "Spice",
       "Other",
     ];
-  const [searchType, setSearchType] = React.useState(["selected", "", "", ""]); // [safe,expiring,expiring-fast,expired]
+  const [searchType, setSearchType] = React.useState(["", "", "", ""]); // [safe,expiring,expiring-fast,expired]
   const [optionsOpen, setOptionsOpen] = React.useState([]); // array of booleans to keep track of which row option is open
   const [addOpen, setAddOpen] = React.useState(false);
   const [addSearchValue, setAddSearchValue] = React.useState("");
