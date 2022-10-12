@@ -50,9 +50,8 @@ const Ingredients = ({ children }) => {
   const [editExpiryDate, setEditExpiryDate] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
-
-  const uid = "xtDKw9PlJxXZFPo53RDvF884Cde2"
-  // localStorage.getItem("uid");
+  // const uid = "xtDKw9PlJxXZFPo53RDvF884Cde2"
+  const uid = localStorage.getItem("uid");
   const defaultCategories = [
     "Dairy",
     "Meat",
