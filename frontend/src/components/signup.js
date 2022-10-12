@@ -1,11 +1,14 @@
 import { Form, Button, Spinner } from "react-bootstrap";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  signOut,
+} from "firebase/auth";
 import * as Yup from "yup";
 import { Formik } from "formik";
 import { auth } from "../FirebaseConfig";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import axios from "axios";
 import { ChevronLeft } from "react-bootstrap-icons";
 
 const schema = Yup.object().shape({
@@ -33,29 +36,35 @@ const SignUp = (props) => {
   const submitHandler = (values, { setSubmitting, setFieldError }) => {
     createUserWithEmailAndPassword(auth, values.email, values.password)
       .then((userCredential) => {
+        sendEmailVerification(userCredential.user).then(() => {
+          signOut(auth).then(() => {
+            setSubmitting(false);
+            props.redirectHandler();
+          });
+        });
         // Post data to backend
-        axios
-          .post("http://localhost:8000/newuser", {
-            userid: `${userCredential.user.uid}`,
-            name: `${values.name}`,
-          })
-          .then(
-            (response) => {
-              if (response.data === "success") {
-                localStorage.setItem("uid", userCredential.user.uid);
-                navigate("/dashboard");
-                setSubmitting(false);
-              }
-            },
-            (error) => {
-              console.log(error);
-              setFieldError(
-                "name",
-                "Please check your connection and try again."
-              );
-              setSubmitting(false);
-            }
-          );
+        // axios
+        //   .post("http://localhost:8000/newuser", {
+        //     userid: `${userCredential.user.uid}`,
+        //     name: `${values.name}`,
+        //   })
+        //   .then(
+        //     (response) => {
+        //       if (response.data === "success") {
+        //         localStorage.setItem("uid", userCredential.user.uid);
+        //         navigate("/dashboard");
+        //         setSubmitting(false);
+        //       }
+        //     },
+        //     (error) => {
+        //       console.log(error);
+        //       setFieldError(
+        //         "name",
+        //         "Please check your connection and try again."
+        //       );
+        //       setSubmitting(false);
+        //     }
+        //   );
       })
       .catch((error) => {
         const errorCode = error.code;

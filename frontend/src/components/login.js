@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useEffect } from "react";
 import { Button, Form, Spinner } from "react-bootstrap";
 import * as Yup from "yup";
 import { Formik } from "formik";
@@ -7,6 +7,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import "../styles/Typography.css";
+import axios from "axios";
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -26,10 +27,31 @@ const Login = (props) => {
   const submitHandler = (values, { setSubmitting, setFieldError }) => {
     signInWithEmailAndPassword(auth, values.email, values.password)
       .then((userCredential) => {
-        localStorage.setItem("uid", userCredential.user.uid);
-        // Go into app
-        navigate("/dashboard");
-        setSubmitting(false);
+        if (!userCredential.user.emailVerified) {
+          setFieldError("email", "Your email is not verified!");
+          setSubmitting(false);
+        } else {
+          // Post data to backend
+          axios
+            .post("http://localhost:8000/newuser", {
+              userid: `${userCredential.user.uid}`,
+              name: `${values.name}`,
+            })
+            .then(
+              (response) => {
+                localStorage.setItem("uid", userCredential.user.uid);
+                navigate("/dashboard");
+                setSubmitting(false);
+              },
+              (error) => {
+                setFieldError(
+                  "email",
+                  "Please check your connection and try again."
+                );
+                setSubmitting(false);
+              }
+            );
+        }
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -49,6 +71,9 @@ const Login = (props) => {
         setSubmitting(false);
       });
   };
+
+  useEffect(() => {}, []);
+
   return (
     <AnimatePresence exitBeforeEnter>
       <motion.div
