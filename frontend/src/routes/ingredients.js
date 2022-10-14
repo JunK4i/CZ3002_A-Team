@@ -325,6 +325,13 @@ const Ingredients = ({ children }) => {
     setFilterValue(e.target.value);
   }
 
+  function openDatalist(e) {
+    let input = document.getElementById("ingredient-input");
+    input.addEventListener("focus", function () {
+      alert("event focussed");
+    })
+  }
+
   // UI components
   function renderError() {
     <div className="dialog">
@@ -367,12 +374,12 @@ const Ingredients = ({ children }) => {
               }}
             >
               <div className="form-group">
-                <label for="ingredient-name" className="text-bold">
+                <label for="input-ingredient" className="text-bold">
                   Ingredient Name
                 </label>
                 <div class="input-group mb-3">
                   <input
-                    id="ingredient-name"
+                    id="input-ingredient"
                     type="text"
                     placeholder="Search Ingredient..."
                     className="form-control"
@@ -384,16 +391,18 @@ const Ingredients = ({ children }) => {
                       handleAddIngredient(e);
                     }}
                     onKeyDown={handleEnterSearch}
+                    temp=""
                     required
                   />
-                  <button
+                  {/* <button
                     className="btn btn-outline-secondary"
                     type="button"
                     id="button-addon1"
-                    onClick={handleClickSearch}
-                  >
+                    onClick={e => {
+                      handleClickSearch();
+                    }}>
                     <i className="bi-search"></i>
-                  </button>
+                  </button> */}
                   <datalist id="datalistOptions">
                     {addSearchResults.map((item, index) => (
                       <option value={item.name} key={index}>
